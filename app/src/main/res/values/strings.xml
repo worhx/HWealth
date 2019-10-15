@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">3X03</string>
+    <string name="app_name">Hwealth</string>
+    <string name="username">User Name</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="fullname">Full Name</string>
+    <string name="email">Email</string>
+
 </resources>
