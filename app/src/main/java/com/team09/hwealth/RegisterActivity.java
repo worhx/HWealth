@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private RequestQueue mQueue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,9 +94,10 @@ public class RegisterActivity extends AppCompatActivity {
                             //Toast.makeText(getApplicationContext(), "Response is: " + response.substring(0, 500), Toast.LENGTH_LONG).show();
                             if (objres.getString("error") == "false") {
                                 Log.d(TAG, objres.toString());
+                                Toast.makeText(RegisterActivity.this, objres.getString("message"), Toast.LENGTH_LONG).show();
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(LoginActivityIntent);
-                                Toast.makeText(RegisterActivity.this, objres.getString("message"), Toast.LENGTH_LONG).show();
+                                finish();
                             }
 
 
@@ -119,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                        Log.d(TAG,errorJSON.getString("message").toString());
                         Toast.makeText(RegisterActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                 }

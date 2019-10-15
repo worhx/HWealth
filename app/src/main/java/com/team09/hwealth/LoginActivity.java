@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -66,35 +67,40 @@ public class LoginActivity extends AppCompatActivity {
     ////Submit
     private void Submit(JSONObject data)
     {
-        String URL="https://jsonplaceholder.typicode.com/posts";
+        String URL = "https://hwealth.herokuapp.com/api/auth/login";
         final String savedata = data.toString();
         mQueue = Volley.newRequestQueue(getApplicationContext());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    //correct response
-                    JSONObject objres=new JSONObject(response);
-                    JSONObject fakeresult = new JSONObject();
-                    fakeresult.put("error","false");
-                    fakeresult.put("username","jerrylim");
-                    fakeresult.put("token","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDkwODMwZDZmY2U0ODQxMzBmMmQwZGEiLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE1Njk4MjYzNjAsImV4cCI6MTU2OTgyOlp2MH0.-xkuijaih-YDz6XpEJCAXMi8jVaxoVqoLafKcJhaF2E");
-                    if(!Boolean.parseBoolean(fakeresult.getString("error"))){
+                    JSONObject objres = new JSONObject(response);
+                    if (objres.getString("error") == "false") {
+                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
                         Intent MainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(MainActivityIntent);
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(),"else",Toast.LENGTH_SHORT);
+                        finish();
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(getApplicationContext(),"Server Error",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON = null;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+//                        Log.d(TAG,errorJSON.getString("message").toString());
+                        Toast.makeText(LoginActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
+                }
             }
         }) {
             @Override
