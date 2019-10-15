@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animationCache="false"
@@ -25,7 +24,7 @@
                 android:layout_gravity="center"/>
 
             <TextView
-                android:id="@+id/idTV"
+                android:id="@+id/userTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/username"
@@ -33,7 +32,7 @@
                 android:textColor="@color/address" />
 
             <EditText
-                android:id="@+id/idET"
+                android:id="@+id/userET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -64,6 +63,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:text="@string/login" />
+
+            <Button
+                android:id="@+id/register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:text="@string/register" />
         </LinearLayout>
 
     </RelativeLayout>

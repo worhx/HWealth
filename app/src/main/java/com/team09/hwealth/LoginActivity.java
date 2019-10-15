@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,9 +21,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
-import androidx.appcompat.app.AppCompatActivity;
+import java.nio.charset.StandardCharsets;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -31,17 +31,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Button login = findViewById(R.id.login);
-        final EditText idET = findViewById(R.id.idET);
+        Button register = findViewById(R.id.register);
+        final EditText userET = findViewById(R.id.userET);
         final EditText passET = findViewById(R.id.passwordET);
         mQueue = Volley.newRequestQueue(this);
         login.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                String idString = idET.getText().toString();
+                String userString = userET.getText().toString();
                 String passString = passET.getText().toString();
                 JSONObject send = new JSONObject();
                 try {
-                    send.put("username",idString);
+                    send.put("username", userString);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -52,6 +53,13 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 Log.d(TAG,send.toString());
                 Submit(send);
+            }
+        });
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent RegisterActivityIntent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(RegisterActivityIntent);
             }
         });
     }
@@ -96,12 +104,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                try {
-                    return savedata == null ? null : savedata.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    //Log.v("Unsupported Encoding while trying to get the bytes", data);
-                    return null;
-                }
+                return savedata == null ? null : savedata.getBytes(StandardCharsets.UTF_8);
             }
 
         };
