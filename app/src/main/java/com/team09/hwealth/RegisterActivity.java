@@ -94,10 +94,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 Log.d(TAG, objres.toString());
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(LoginActivityIntent);
-                            } else {
-                                Log.d(TAG, objres.toString());
-                                Toast.makeText(RegisterActivity.this, objres.getString("message"), Toast.LENGTH_LONG).show();
-                            }
+                                Toast.makeText(RegisterActivity.this, "Account Created", Toast.LENGTH_LONG).show();
+                            } 
 
 
                         } catch (JSONException e) {
