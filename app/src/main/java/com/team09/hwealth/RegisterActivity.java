@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -88,27 +89,40 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject objres = new JSONObject(response);
-                            Log.d(TAG, objres.toString());
+//                            Log.d(TAG, objres.toString());
                             //Toast.makeText(getApplicationContext(), "Response is: " + response.substring(0, 500), Toast.LENGTH_LONG).show();
                             if (objres.getString("error") == "false") {
                                 Log.d(TAG, objres.toString());
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(LoginActivityIntent);
-                                Toast.makeText(RegisterActivity.this, "Account Created", Toast.LENGTH_LONG).show();
-                            } 
+                                Toast.makeText(RegisterActivity.this, objres.getString("message"), Toast.LENGTH_LONG).show();
+                            }
 
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        // Display the first 500 characters of the response string.
 
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "That didn't work!", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "Error");
+//                Toast.makeText(getApplicationContext(), "That didn't work!", Toast.LENGTH_LONG).show();
+//                Log.d(TAG, "Error" + error.getMessage());
+
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON = null;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+//                        Log.d(TAG,errorJSON.getString("message").toString());
+                        Toast.makeText(RegisterActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
         }) {
             @Override
