@@ -36,6 +36,7 @@ public class StepsActivity extends AppCompatActivity {
 
     /*TODO
         Find specific day for steps
+
     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class StepsActivity extends AppCompatActivity {
         final String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         Button createSteps = findViewById(R.id.createStepsButton);
         Button retrieveSteps = findViewById(R.id.retrieveStepsButton);
+        //step fixed at 199 for testing
         final int step = 199;
         createSteps.setOnClickListener(new View.OnClickListener() {
             @Override
