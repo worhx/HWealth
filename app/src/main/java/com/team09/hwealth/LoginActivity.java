@@ -1,6 +1,7 @@
 package com.team09.hwealth;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Button login = findViewById(R.id.login);
-        Button register = findViewById(R.id.register);
+        Button register = findViewById(R.id.registerButton);
         final EditText userET = findViewById(R.id.userET);
         final EditText passET = findViewById(R.id.passwordET);
         mQueue = Volley.newRequestQueue(this);
@@ -77,8 +78,14 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject objres = new JSONObject(response);
                     if (objres.getString("error") == "false") {
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
-                        Intent MainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(MainActivityIntent);
+                        SharedPreferences.Editor editor = getSharedPreferences("token", MODE_PRIVATE).edit();
+                        editor.putString("token", objres.getString("token"));
+                        editor.apply();
+                        //Toast.makeText(LoginActivity.this,sharedPref.getString("token","null"),Toast.LENGTH_LONG).show();
+//                        Intent MainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+//                        startActivity(MainActivityIntent);
+                        Intent StepsActivityIntent = new Intent(getApplicationContext(), StepsActivity.class);
+                        startActivity(StepsActivityIntent);
                         finish();
                     }
                 } catch (JSONException e) {

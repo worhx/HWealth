@@ -1,10 +1,14 @@
 <resources>
-    <string name="app_name">Hwealth</string>
+    <string name="app_name">HWealth</string>
     <string name="username">User Name</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="fullname">Full Name</string>
     <string name="email">Email</string>
+    <string name="steps">Steps</string>
+    <string name="createSteps">Create Steps</string>
+    <string name="retrieveSteps">Retrieve Steps</string>
+    <string name="null_steps">0</string>
 
 </resources>

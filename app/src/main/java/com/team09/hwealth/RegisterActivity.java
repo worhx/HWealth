@@ -32,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        Button register = findViewById(R.id.register);
+        Button register = findViewById(R.id.registerButton);
         final EditText fullNameET = findViewById(R.id.fullNameET);
         final EditText userET = findViewById(R.id.userET);
         final EditText passET = findViewById(R.id.passwordET);
