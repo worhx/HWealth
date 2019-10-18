@@ -10,5 +10,6 @@
     <string name="createSteps">Create Steps</string>
     <string name="retrieveSteps">Retrieve Steps</string>
     <string name="null_steps">0</string>
+    <string name="please_wait">Please wait ...</string>
 
 </resources>

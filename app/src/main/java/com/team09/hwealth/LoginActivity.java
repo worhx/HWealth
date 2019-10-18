@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private RequestQueue mQueue;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,25 +38,33 @@ public class LoginActivity extends AppCompatActivity {
         Button register = findViewById(R.id.registerButton);
         final EditText userET = findViewById(R.id.userET);
         final EditText passET = findViewById(R.id.passwordET);
+        progressBar = findViewById(R.id.progressBar);
         mQueue = Volley.newRequestQueue(this);
         login.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 String userString = userET.getText().toString();
                 String passString = passET.getText().toString();
-                JSONObject send = new JSONObject();
-                try {
-                    send.put("username", userString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (!userString.isEmpty() || !passString.isEmpty()) {
+                    JSONObject send = new JSONObject();
+                    try {
+                        send.put("username", userString);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        send.put("password",passString);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d(TAG,send.toString());
+                    progressBar.setVisibility(View.VISIBLE);
+                    Submit(send);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
                 }
-                try {
-                    send.put("password",passString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d(TAG,send.toString());
-                Submit(send);
+
+
             }
         });
         register.setOnClickListener(new View.OnClickListener() {
@@ -81,9 +91,11 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = getSharedPreferences("token", MODE_PRIVATE).edit();
                         editor.putString("token", objres.getString("token"));
                         editor.apply();
+
                         //Toast.makeText(LoginActivity.this,sharedPref.getString("token","null"),Toast.LENGTH_LONG).show();
 //                        Intent MainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
 //                        startActivity(MainActivityIntent);
+                        progressBar.setVisibility(View.GONE);
                         Intent StepsActivityIntent = new Intent(getApplicationContext(), StepsActivity.class);
                         startActivity(StepsActivityIntent);
                         finish();
@@ -95,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressBar.setVisibility(View.GONE);
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String strJSONError = new String(networkResponse.data);
