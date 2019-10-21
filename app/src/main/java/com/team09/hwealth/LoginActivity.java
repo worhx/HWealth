@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
 //                        Intent MainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
 //                        startActivity(MainActivityIntent);
                         progressBar.setVisibility(View.GONE);
-                        Intent StepsActivityIntent = new Intent(getApplicationContext(), StepsActivity.class);
+                        Intent StepsActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(StepsActivityIntent);
                         finish();
                     }
