@@ -36,7 +36,7 @@
             android:layout_below="@+id/imgUser"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-light"
-            android:text="Myname"
+            android:text="Claire"
             android:textColor="@color/white"
             android:textSize="32sp" />
 
@@ -85,35 +85,6 @@
                     android:fontFamily="sans-serif-light"
                     android:inputType="date"
                     android:text="26-02-1967"
-                    android:textColor="#000000"
-                    android:textSize="18sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@color/grey" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Phone Number"
-                    android:textColor="@color/headings"
-                    android:textSize="13sp" />
-
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:inputType="phone"
-                    android:text="+6591234567"
                     android:textColor="#000000"
                     android:textSize="18sp" />
 
