@@ -3,12 +3,12 @@ package com.team09.hwealth;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -30,22 +30,21 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import static android.content.Context.MODE_PRIVATE;
-
-public class StepsFragment extends Fragment {
+public class StepsActivity extends AppCompatActivity {
     private static final String TAG = "StepsActivity";
     private RequestQueue mQueue;
-    @Nullable
+
+    /*TODO
+        Find specific day for steps
+
+    */
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view =  inflater.inflate(R.layout.fragment_steps,container,false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_steps);
         final String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        Button createSteps = view.findViewById(R.id.createStepsButton);
-        Button retrieveSteps = view.findViewById(R.id.retrieveStepsButton);
+        Button createSteps = findViewById(R.id.createStepsButton);
+        Button retrieveSteps = findViewById(R.id.retrieveStepsButton);
         //step fixed at 199 for testing
         final int step = 199;
         createSteps.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +64,7 @@ public class StepsFragment extends Fragment {
                 }
                 Log.d(TAG, send.toString());
 
-                Submit(send,view);
+                Submit(send);
             }
         });
         retrieveSteps.setOnClickListener(new View.OnClickListener() {
@@ -83,17 +82,17 @@ public class StepsFragment extends Fragment {
 //                }
                 Log.d(TAG, send.toString());
 
-                Retrieve(send,view);
+                Retrieve(send);
             }
         });
-    return view;
+
     }
 
-    private void Submit(JSONObject data,View view) {
+    private void Submit(JSONObject data) {
         String URL = "https://hwealth.herokuapp.com/api/steps-record";
         final String savedata = data.toString();
-        mQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
+        mQueue = Volley.newRequestQueue(getApplicationContext());
+        final TextView currentStepTV = findViewById(R.id.currentStepsTV);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -102,7 +101,7 @@ public class StepsFragment extends Fragment {
                             JSONObject objres = new JSONObject(response);
                             if (objres.getString("error") == "false") {
                                 Log.d(TAG, objres.toString());
-                                Toast.makeText(getActivity().getApplicationContext(), objres.getString("message"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(StepsActivity.this, objres.getString("message"), Toast.LENGTH_LONG).show();
                                 currentStepTV.setText(objres.getString("message"));
                             }
 
@@ -121,9 +120,9 @@ public class StepsFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
 //                        Log.d(TAG,errorJSON.getString("message").toString());
-                        Toast.makeText(getActivity().getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(StepsActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
-                        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -136,7 +135,7 @@ public class StepsFragment extends Fragment {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                SharedPreferences sharedPref = getActivity().getSharedPreferences("token", MODE_PRIVATE);
+                SharedPreferences sharedPref = getSharedPreferences("token", MODE_PRIVATE);
                 String token = sharedPref.getString("token", null);
                 HashMap<String, String> headers = new HashMap<String, String>();
                 headers.put("Authorization", "Bearer " + token);
@@ -153,11 +152,11 @@ public class StepsFragment extends Fragment {
         mQueue.add(stringRequest);
     }
 
-    private void Retrieve(JSONObject data,View view) {
+    private void Retrieve(JSONObject data) {
         String URL = "https://hwealth.herokuapp.com/api/steps-record";
         final String savedata = data.toString();
-        mQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
+        mQueue = Volley.newRequestQueue(getApplicationContext());
+        final TextView currentStepTV = findViewById(R.id.currentStepsTV);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -188,9 +187,9 @@ public class StepsFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
 //                        Log.d(TAG,errorJSON.getString("message").toString());
-                        Toast.makeText(getActivity().getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(StepsActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
-                        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -203,7 +202,7 @@ public class StepsFragment extends Fragment {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                SharedPreferences sharedPref = getActivity().getSharedPreferences("token", MODE_PRIVATE);
+                SharedPreferences sharedPref = getSharedPreferences("token", MODE_PRIVATE);
                 String token = sharedPref.getString("token", null);
                 HashMap<String, String> headers = new HashMap<String, String>();
                 headers.put("Authorization", "Bearer " + token);
