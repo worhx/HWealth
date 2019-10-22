@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
@@ -18,6 +19,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +34,8 @@ import java.nio.charset.StandardCharsets;
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private RequestQueue mQueue;
+    final String URL_VERIFY_ON_SERVER = "https://www.google.com/recaptcha/api/siteverify";
+    final String SITE_KEY = "6LeFk74UAAAAAL4n7fRYBIMw8Ri_G52acK3RfpVK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,17 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText passET = findViewById(R.id.passwordET);
         final EditText emailET = findViewById(R.id.emailET);
         mQueue = Volley.newRequestQueue(this);
+
+        //captcha button
+        Button verify = findViewById(R.id.recaptchaButton);
+        verify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                validateCaptcha(view);
+            }
+
+        });
+
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +95,75 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 Log.d(TAG, send.toString());
                 Submit(send);
+            }
+        });
+    }
+
+    public void validateCaptcha(View view) {
+        Log.d(TAG, "test");
+        // Showing reCAPTCHA dialog
+        SafetyNet.getClient(this).verifyWithRecaptcha(SITE_KEY)
+                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                    @Override
+                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                        Log.d(TAG, "onSuccess");
+
+                        if (!response.getTokenResult().isEmpty()) {
+
+                            // Received captcha token
+                            // This token still needs to be validated on the server
+                            // using the SECRET key
+                            verifyTokenOnServer(response.getTokenResult());
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if (e instanceof ApiException) {
+                            ApiException apiException = (ApiException) e;
+                            Log.d(TAG, "Error message: " +
+                                    CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
+                        } else {
+                            Log.d(TAG, "Unknown type of error: " + e.getMessage());
+                        }
+                    }
+                });
+    }
+
+    public void verifyTokenOnServer(final String token) {
+        Log.d(TAG, "Captcha Token" + token);
+
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                URL_VERIFY_ON_SERVER, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, response.toString());
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    String message = jsonObject.getString("message");
+
+                    if (success) {
+                        // Congrats! captcha verified successfully on server
+                        // TODO - submit the feedback to your server
+
+
+                    } else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Error: " + error.getMessage());
             }
         });
     }
