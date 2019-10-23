@@ -51,18 +51,6 @@
             android:text="Claire"
             android:textColor="@color/white"
             android:textSize="32sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/userName"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="sans-serif-light"
-            android:text="Woodland, Singapore"
-            android:textAllCaps="true"
-            android:textColor="@color/address"
-            android:textSize="14sp" />
-
     </RelativeLayout>
 
     <LinearLayout
