@@ -30,11 +30,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private RequestQueue mQueue;
-    final String URL_VERIFY_ON_SERVER = "https://www.google.com/recaptcha/api/siteverify";
+    final String URL_VERIFY_ON_SERVER = "https://hwealth.herokuapp.com/api/captcha";
     final String SITE_KEY = "6LeFk74UAAAAAL4n7fRYBIMw8Ri_G52acK3RfpVK";
 
     @Override
@@ -131,6 +133,31 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+
+
+//    public void verifyTokenOnServer(final String token) throws MalformedURLException {
+//
+//
+//        URL url = new URL(URL_VERIFY_ON_SERVER);
+//        HttpURLConnection client = null;
+//
+//        try {
+//            client = (HttpURLConnection) url.openConnection();
+//            client.setRequestMethod("POST");
+//            client.setRequestProperty("captchaResponse", token);
+//            client.setDoOutput(true);
+//            OutputStream outputPost = new BufferedOutputStream(client.getOutputStream());
+//            writeStream(outputPost);
+//            outputPost.flush();
+//            outputPost.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//
+//
+//    }
     public void verifyTokenOnServer(final String token) {
         Log.d(TAG, "Captcha Token" + token);
 
@@ -139,7 +166,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, response.toString());
+                Log.d(TAG, response);
+                Log.d(TAG, "response above me");
 
                 try {
                     JSONObject jsonObject = new JSONObject(response);
@@ -148,7 +176,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if (success) {
                         // Congrats! captcha verified successfully on server
-                        // TODO - submit the feedback to your server
+                        Log.d(TAG, "Success");
 
 
                     } else {
@@ -156,7 +184,6 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-
                 }
 
             }
@@ -165,9 +192,22 @@ public class RegisterActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Error: " + error.getMessage());
             }
-        });
-    }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> MyData = new HashMap<String, String>();
+                MyData.put("captchaResponse", token);
 
+                return MyData;
+
+            }
+
+        };
+        mQueue.add(strReq);
+        Log.d(TAG, "Captcha Token" + token);
+
+        //Log.d(TAG, strReq.toString());
+    }
     private void Submit(JSONObject data) {
         String URL = "https://hwealth.herokuapp.com/api/account/register";
         final String savedata = data.toString();
