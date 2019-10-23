@@ -90,11 +90,6 @@ public class RegisterActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                try {
-                    send.put("role", "User");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 Log.d(TAG, send.toString());
                 Submit(send);
             }
