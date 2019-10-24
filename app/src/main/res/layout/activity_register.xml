@@ -97,14 +97,14 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:text="@string/register" />
 
-            <Button
-                android:id="@+id/recaptchaButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="validateCaptcha"
-                android:layout_gravity="center_vertical|center_horizontal"
+<!--            <Button-->
+<!--                android:id="@+id/recaptchaButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:onClick="validateCaptcha"-->
+<!--                android:layout_gravity="center_vertical|center_horizontal"-->
 
-                android:text="Click for recaptcha" />
+<!--                android:text="Click for recaptcha" />-->
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

@@ -34,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private RequestQueue mQueue;
-    //final String URL_VERIFY_ON_SERVER = "https://hwealth.herokuapp.com/api/captcha";
     final String SITE_KEY = "6LeFk74UAAAAAL4n7fRYBIMw8Ri_G52acK3RfpVK";
     private RequestQueue vQueue;
 
@@ -50,19 +49,20 @@ public class RegisterActivity extends AppCompatActivity {
         mQueue = Volley.newRequestQueue(this);
 
         //captcha button
-        Button verify = findViewById(R.id.recaptchaButton);
-        verify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validateCaptcha();
-            }
-
-        });
+//        Button verify = findViewById(R.id.recaptchaButton);
+//        verify.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                validateCaptcha();
+//            }
+//
+//        });
 
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String fullNameString = fullNameET.getText().toString();
                 String userString = userET.getText().toString();
                 String passString = passET.getText().toString();
@@ -90,12 +90,13 @@ public class RegisterActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 Log.d(TAG, send.toString());
-                Submit(send);
+                validateCaptcha(send);
+                //Submit(send);
             }
         });
     }
 
-    public void validateCaptcha() {
+    public void validateCaptcha(final JSONObject submitJSON) {
         SafetyNet.getClient(this).verifyWithRecaptcha(SITE_KEY)
                 .addOnSuccessListener(this,
                         new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
@@ -108,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     // Validate the user response token using the
                                     // reCAPTCHA siteverify API.
 
-                                    verifyTokenOnServer(userResponseToken);
+                                    verifyTokenOnServer(userResponseToken, submitJSON);
                                 }
                             }
                         })
@@ -132,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    public void verifyTokenOnServer(String token) {
+    public void verifyTokenOnServer(String token, final JSONObject submit) {
         JSONObject tokenJSON = new JSONObject();
         try {
             tokenJSON.put("captchaResponse", token);
@@ -153,7 +154,8 @@ public class RegisterActivity extends AppCompatActivity {
                             //Toast.makeText(getApplicationContext(), "Response is: " + response.substring(0, 500), Toast.LENGTH_LONG).show();
                             if (objres.getString("success").equals("true")) {
                                 Log.d(TAG, objres.toString());
-                                Toast.makeText(RegisterActivity.this, objres.getString("success"), Toast.LENGTH_LONG).show();
+                                //Toast.makeText(RegisterActivity.this, objres.getString("success"), Toast.LENGTH_LONG).show();
+                                Submit(submit);
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(LoginActivityIntent);
                                 finish();
@@ -199,7 +201,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    //Log.d(TAG, strReq.toString());
+
     private void Submit(JSONObject data) {
         String URL = "https://hwealth.herokuapp.com/api/account/register";
         final String savedata = data.toString();
