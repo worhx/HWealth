@@ -30,14 +30,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private RequestQueue mQueue;
-    final String URL_VERIFY_ON_SERVER = "https://hwealth.herokuapp.com/api/captcha";
+    //final String URL_VERIFY_ON_SERVER = "https://hwealth.herokuapp.com/api/captcha";
     final String SITE_KEY = "6LeFk74UAAAAAL4n7fRYBIMw8Ri_G52acK3RfpVK";
+    private RequestQueue vQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validateCaptcha(view);
+                validateCaptcha();
             }
 
         });
@@ -96,113 +95,111 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    public void validateCaptcha(View view) {
-        Log.d(TAG, "test");
-        // Showing reCAPTCHA dialog
+    public void validateCaptcha() {
         SafetyNet.getClient(this).verifyWithRecaptcha(SITE_KEY)
-                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
-                    @Override
-                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
-                        Log.d(TAG, "onSuccess");
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                            @Override
+                            public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                                // Indicates communication with reCAPTCHA service was
+                                // successful.
+                                String userResponseToken = response.getTokenResult();
+                                if (!userResponseToken.isEmpty()) {
+                                    // Validate the user response token using the
+                                    // reCAPTCHA siteverify API.
 
-                        if (!response.getTokenResult().isEmpty()) {
-
-                            // Received captcha token
-                            // This token still needs to be validated on the server
-                            // using the SECRET key
-                            verifyTokenOnServer(response.getTokenResult());
-                        }
-                    }
-                })
+                                    verifyTokenOnServer(userResponseToken);
+                                }
+                            }
+                        })
                 .addOnFailureListener(this, new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         if (e instanceof ApiException) {
+                            // An error occurred when communicating with the
+                            // reCAPTCHA service. Refer to the status code to
+                            // handle the error appropriately.
                             ApiException apiException = (ApiException) e;
-                            Log.d(TAG, "Error message: " +
-                                    CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
+                            int statusCode = apiException.getStatusCode();
+                            Log.d(TAG, "Error: " + CommonStatusCodes
+                                    .getStatusCodeString(statusCode));
                         } else {
-                            Log.d(TAG, "Unknown type of error: " + e.getMessage());
+                            // A different, unknown type of error occurred.
+                            Log.d(TAG, "Error: " + e.getMessage());
                         }
                     }
                 });
     }
 
 
-
-//    public void verifyTokenOnServer(final String token) throws MalformedURLException {
-//
-//
-//        URL url = new URL(URL_VERIFY_ON_SERVER);
-//        HttpURLConnection client = null;
-//
-//        try {
-//            client = (HttpURLConnection) url.openConnection();
-//            client.setRequestMethod("POST");
-//            client.setRequestProperty("captchaResponse", token);
-//            client.setDoOutput(true);
-//            OutputStream outputPost = new BufferedOutputStream(client.getOutputStream());
-//            writeStream(outputPost);
-//            outputPost.flush();
-//            outputPost.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//
-//
-//    }
-    public void verifyTokenOnServer(final String token) {
-        Log.d(TAG, "Captcha Token" + token);
-
-        StringRequest strReq = new StringRequest(Request.Method.POST,
-                URL_VERIFY_ON_SERVER, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, response);
-                Log.d(TAG, "response above me");
-
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean success = jsonObject.getBoolean("success");
-                    String message = jsonObject.getString("message");
-
-                    if (success) {
-                        // Congrats! captcha verified successfully on server
-                        Log.d(TAG, "Success");
+    public void verifyTokenOnServer(String token) {
+        JSONObject tokenJSON = new JSONObject();
+        try {
+            tokenJSON.put("captchaResponse", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String savedata;
+        savedata = tokenJSON.toString();
+        mQueue = Volley.newRequestQueue(getApplicationContext());
+        String URL = "https://hwealth.herokuapp.com/api/captcha";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject objres = new JSONObject(response);
+//                            Log.d(TAG, objres.toString());
+                            //Toast.makeText(getApplicationContext(), "Response is: " + response.substring(0, 500), Toast.LENGTH_LONG).show();
+                            if (objres.getString("success").equals("true")) {
+                                Log.d(TAG, objres.toString());
+                                Toast.makeText(RegisterActivity.this, objres.getString("success"), Toast.LENGTH_LONG).show();
+                                Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(LoginActivityIntent);
+                                finish();
+                            }
 
 
-                    } else {
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Error: " + error.getMessage());
+
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON = null;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+//                        Log.d(TAG,errorJSON.getString("message").toString());
+                        Toast.makeText(RegisterActivity.this, errorJSON.getString("error-codes"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
             }
         }) {
             @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> MyData = new HashMap<String, String>();
-                MyData.put("captchaResponse", token);
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
 
-                return MyData;
-
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                return savedata == null ? null : savedata.getBytes(StandardCharsets.UTF_8);
             }
 
         };
-        mQueue.add(strReq);
-        Log.d(TAG, "Captcha Token" + token);
-
-        //Log.d(TAG, strReq.toString());
+        mQueue.add(stringRequest);
     }
+
+
+    //Log.d(TAG, strReq.toString());
     private void Submit(JSONObject data) {
         String URL = "https://hwealth.herokuapp.com/api/account/register";
         final String savedata = data.toString();
