@@ -11,14 +11,13 @@
         android:roundIcon="@drawable/hwealthlogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StepsActivity"></activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".EditActivity"/>
         <activity android:name=".LoginActivity">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

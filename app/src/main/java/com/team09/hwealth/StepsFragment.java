@@ -36,11 +36,10 @@ import java.util.Map;
 import java.util.Objects;
 
 public class StepsFragment extends Fragment {
-    private static final String TAG = "StepsActivity";
+    private static final String TAG = "StepsFragment";
     private static final String STEP_URL = "https://hwealth.herokuapp.com/api/steps-record";
     private RequestQueue mQueue;
     private static final String SHAREDPREF = "SHAREDPREF";
-
     private SharedPreferences prefs;
 
     @Nullable
@@ -61,10 +60,6 @@ public class StepsFragment extends Fragment {
                 JSONObject send = new JSONObject();
                 try {
                     send.put("totalSteps", step);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
                     send.put("dateRecorded", date);
                 } catch (JSONException e) {
                     e.printStackTrace();

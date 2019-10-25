@@ -4,17 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".StepsActivity">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical">
+    tools:context=".MainActivity">
 
             <TextView
                 android:id="@+id/stepsTV"
@@ -23,7 +13,7 @@
                 android:layout_gravity="center"
                 android:text="@string/steps"
                 android:textColor="@color/address"
-                android:textSize="24dp" />
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/currentStepsTV"
@@ -31,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/null_steps"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,20 +29,19 @@
                 android:orientation="horizontal">
 
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/createStepsButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/createSteps" />
+                    android:text="@string/create_steps" />
 
                 <Button
+                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/retrieveStepsButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/retrieveSteps" />
+                    android:text="@string/retrieve_steps" />
             </LinearLayout>
 
-        </LinearLayout>
-
-    </RelativeLayout>
 
 </LinearLayout>

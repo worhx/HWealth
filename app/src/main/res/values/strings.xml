@@ -1,15 +1,31 @@
 <resources>
     <string name="app_name">HWealth</string>
+    <string name="app_logo">HWealth logo</string>
     <string name="username">User Name</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
-    <string name="fullname">Full Name</string>
+    <string name="full_name">Full Name</string>
     <string name="email">Email</string>
     <string name="steps">Steps</string>
-    <string name="createSteps">Create Steps</string>
-    <string name="retrieveSteps">Retrieve Steps</string>
+    <string name="create_steps">Create Steps</string>
+    <string name="retrieve_steps">Retrieve Steps</string>
+    <string name="dob">Date Of Birth</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="bmi">BMI</string>
     <string name="null_steps">0</string>
+    <string name="email_add">hello@hotmail.com</string>
+    <string name="gender">Gender</string>
+    <string name="display_photo">Display Photo</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="sample_dob">26–02–1967</string>
+    <string name="sample_weight">67 KG</string>
+    <string name="sample_height">177 CM</string>
+    <string name="sample_bmi">21.4</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
