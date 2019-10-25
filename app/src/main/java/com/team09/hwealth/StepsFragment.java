@@ -10,6 +10,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -29,10 +33,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -213,7 +213,7 @@ public class StepsFragment extends Fragment {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                return savedata == null ? null : savedata.getBytes(StandardCharsets.UTF_8);
+                return savedata.getBytes(StandardCharsets.UTF_8);
             }
 
         };

@@ -193,7 +193,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                return savedata == null ? null : savedata.getBytes(StandardCharsets.UTF_8);
+                return savedata.getBytes(StandardCharsets.UTF_8);
             }
 
         };
@@ -257,7 +257,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                return savedata == null ? null : savedata.getBytes(StandardCharsets.UTF_8);
+                return savedata.getBytes(StandardCharsets.UTF_8);
             }
 
         };

@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public byte[] getBody() throws AuthFailureError {
-                return savedata == null ? null : savedata.getBytes(StandardCharsets.UTF_8);
+                return savedata.getBytes(StandardCharsets.UTF_8);
             }
 
         };
