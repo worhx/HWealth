@@ -24,9 +24,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+
+import javax.crypto.NoSuchPaddingException;
+
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
+    private static final String LOGIN_URL = "https://hwealth.herokuapp.com/api/auth/login";
     private RequestQueue mQueue;
     private ProgressBar progressBar;
     @Override
@@ -38,7 +46,9 @@ public class LoginActivity extends AppCompatActivity {
         final EditText userET = findViewById(R.id.userET);
         final EditText passET = findViewById(R.id.passwordET);
         progressBar = findViewById(R.id.progressBar);
+
         mQueue = Volley.newRequestQueue(this);
+
         login.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -77,29 +87,29 @@ public class LoginActivity extends AppCompatActivity {
     ////Submit
     private void Submit(JSONObject data)
     {
-        String URL = "https://hwealth.herokuapp.com/api/auth/login";
-        final String savedata = data.toString();
+        final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    JSONObject objres = new JSONObject(response);
-                    if (objres.getString("error").equals("false")) {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    if (jsonResponse.getString("error").equals("false")) {
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
-                        SharedPreferences.Editor editor = getSharedPreferences("token", MODE_PRIVATE).edit();
-                        editor.putString("token", objres.getString("token"));
-                        editor.apply();
-
-                        //Toast.makeText(LoginActivity.this,sharedPref.getString("token","null"),Toast.LENGTH_LONG).show();
-//                        Intent MainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-//                        startActivity(MainActivityIntent);
                         progressBar.setVisibility(View.GONE);
+                        //where is this
+                        Log.d(TAG, jsonResponse.getString("token"));
+                        SharedPreferences.Editor editor = getSharedPreferences("token", MODE_PRIVATE).edit();
+                        Cryptor cryptor = new Cryptor();
+                        cryptor.setIv();
+                        editor.putString("token", jsonResponse.getString("token")).apply();
+                        editor.putString("encryptedKey", cryptor.encryptText(jsonResponse.getString("token"))).apply();
+                        editor.putString("keyIv", cryptor.getIv_string()).apply();
                         Intent StepsActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(StepsActivityIntent);
                         finish();
                     }
-                } catch (JSONException e) {
+                } catch (JSONException | NoSuchPaddingException | NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException | InvalidKeyException e) {
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -113,7 +123,6 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
-//                        Log.d(TAG,errorJSON.getString("message").toString());
                         Toast.makeText(LoginActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -129,11 +138,13 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public byte[] getBody() {
-                return savedata.getBytes(StandardCharsets.UTF_8);
+                return saveData.getBytes(StandardCharsets.UTF_8);
             }
 
         };
         mQueue.add(stringRequest);
     }
+
+
 }
 

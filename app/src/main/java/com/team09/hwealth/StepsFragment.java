@@ -38,11 +38,13 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class StepsFragment extends Fragment {
     private static final String TAG = "StepsActivity";
+    private static final String STEP_URL = "https://hwealth.herokuapp.com/api/steps-record";
     private RequestQueue mQueue;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view =  inflater.inflate(R.layout.fragment_steps,container,false);
+        final View view = inflater.inflate(R.layout.fragment_steps, container, false);
         final String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         Button createSteps = view.findViewById(R.id.createStepsButton);
         Button retrieveSteps = view.findViewById(R.id.retrieveStepsButton);
@@ -65,45 +67,37 @@ public class StepsFragment extends Fragment {
                 }
                 Log.d(TAG, send.toString());
 
-                Submit(send,view);
+                Submit(send, view);
             }
         });
         retrieveSteps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 JSONObject send = new JSONObject();
-//                try {
-//                    send.put("totalSteps", step);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }try {
-//                    send.put("dateRecorded",date);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+//
                 Log.d(TAG, send.toString());
 
-                Retrieve(send,view);
+                Retrieve(send, view);
             }
         });
-    return view;
+        return view;
     }
 
-    private void Submit(JSONObject data,View view) {
-        String URL = "https://hwealth.herokuapp.com/api/steps-record";
-        final String savedata = data.toString();
+    private void Submit(JSONObject data, View view) {
+        final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, STEP_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            JSONObject objres = new JSONObject(response);
-                            if (objres.getString("error").equals("false")) {
-                                Log.d(TAG, objres.toString());
-                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), objres.getString("message"), Toast.LENGTH_LONG).show();
-                                currentStepTV.setText(objres.getString("message"));
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("error").equals("false")) {
+                                Log.d(TAG, jsonResponse.toString());
+                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
+                                currentStepTV.setText(jsonResponse.getString("message"));
                             }
 
                         } catch (JSONException e) {
@@ -120,7 +114,6 @@ public class StepsFragment extends Fragment {
                     JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
-//                        Log.d(TAG,errorJSON.getString("message").toString());
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -140,34 +133,31 @@ public class StepsFragment extends Fragment {
                 String token = sharedPref.getString("token", null);
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
-//                Log.d(TAG,token);
                 return headers;
             }
 
             @Override
             public byte[] getBody() {
-                return savedata.getBytes(StandardCharsets.UTF_8);
+                return saveData.getBytes(StandardCharsets.UTF_8);
             }
 
         };
         mQueue.add(stringRequest);
     }
 
-    private void Retrieve(JSONObject data,View view) {
-        String URL = "https://hwealth.herokuapp.com/api/steps-record";
-        final String savedata = data.toString();
+    private void Retrieve(JSONObject data, View view) {
+        final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, STEP_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            JSONObject objres = new JSONObject(response);
-                            if (objres.getString("error").equals("false")) {
-                                Log.d(TAG, objres.toString());
-//                                Toast.makeText(StepsActivity.this, objres.getString("records"), Toast.LENGTH_LONG).show();
-                                JSONArray recordsJSONArr = new JSONArray(objres.getString("records"));
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("error").equals("false")) {
+                                Log.d(TAG, jsonResponse.toString());
+                                JSONArray recordsJSONArr = new JSONArray(jsonResponse.getString("records"));
                                 Log.d(TAG, recordsJSONArr.toString());
                                 JSONObject recordsJSONArrJSONObject = recordsJSONArr.getJSONObject(0);
                                 currentStepTV.setText(recordsJSONArrJSONObject.getString("totalSteps"));
@@ -187,7 +177,6 @@ public class StepsFragment extends Fragment {
                     JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
-//                        Log.d(TAG,errorJSON.getString("message").toString());
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -207,13 +196,12 @@ public class StepsFragment extends Fragment {
                 String token = sharedPref.getString("token", null);
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
-//                Log.d(TAG,token);
                 return headers;
             }
 
             @Override
             public byte[] getBody() {
-                return savedata.getBytes(StandardCharsets.UTF_8);
+                return saveData.getBytes(StandardCharsets.UTF_8);
             }
 
         };

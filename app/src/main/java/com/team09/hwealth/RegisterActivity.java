@@ -32,9 +32,10 @@ import java.nio.charset.StandardCharsets;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
+    private static final String REGISTER_URL = "https://hwealth.herokuapp.com/api/account/register";
+    private static final String CAPTCHA_URL = "https://hwealth.herokuapp.com/api/captcha";
     private RequestQueue mQueue;
     final String SITE_KEY = "6LeFk74UAAAAAL4n7fRYBIMw8Ri_G52acK3RfpVK";
-    private RequestQueue vQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +47,6 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText passET = findViewById(R.id.passwordET);
         final EditText emailET = findViewById(R.id.emailET);
         mQueue = Volley.newRequestQueue(this);
-
-        //captcha button
-//        Button verify = findViewById(R.id.recaptchaButton);
-//        verify.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                validateCaptcha();
-//            }
-//
-//        });
-
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +80,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 Log.d(TAG, send.toString());
                 validateCaptcha(send);
-                //Submit(send);
             }
         });
     }
@@ -107,7 +96,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (!userResponseToken.isEmpty()) {
                                     // Validate the user response token using the
                                     // reCAPTCHA siteverify API.
-
                                     verifyTokenOnServer(userResponseToken, submitJSON);
                                 }
                             }
@@ -139,21 +127,17 @@ public class RegisterActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        final String savedata;
-        savedata = tokenJSON.toString();
+        final String saveData;
+        saveData = tokenJSON.toString();
         mQueue = Volley.newRequestQueue(getApplicationContext());
-        String URL = "https://hwealth.herokuapp.com/api/captcha";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, CAPTCHA_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            JSONObject objres = new JSONObject(response);
-//                            Log.d(TAG, objres.toString());
-                            //Toast.makeText(getApplicationContext(), "Response is: " + response.substring(0, 500), Toast.LENGTH_LONG).show();
-                            if (objres.getString("success").equals("true")) {
-                                Log.d(TAG, objres.toString());
-                                //Toast.makeText(RegisterActivity.this, objres.getString("success"), Toast.LENGTH_LONG).show();
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("success").equals("true")) {
+                                Log.d(TAG, jsonResponse.toString());
                                 Submit(submit);
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(LoginActivityIntent);
@@ -176,7 +160,6 @@ public class RegisterActivity extends AppCompatActivity {
                     JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
-//                        Log.d(TAG,errorJSON.getString("message").toString());
                         Toast.makeText(RegisterActivity.this, errorJSON.getString("error-codes"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -192,7 +175,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public byte[] getBody() {
-                return savedata.getBytes(StandardCharsets.UTF_8);
+                return saveData.getBytes(StandardCharsets.UTF_8);
             }
 
         };
@@ -202,21 +185,18 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void Submit(JSONObject data) {
-        String URL = "https://hwealth.herokuapp.com/api/account/register";
-        final String savedata = data.toString();
+        final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(getApplicationContext());
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            JSONObject objres = new JSONObject(response);
-//                            Log.d(TAG, objres.toString());
-                            //Toast.makeText(getApplicationContext(), "Response is: " + response.substring(0, 500), Toast.LENGTH_LONG).show();
-                            if (objres.getString("error").equals("false")) {
-                                Log.d(TAG, objres.toString());
-                                Toast.makeText(RegisterActivity.this, objres.getString("message"), Toast.LENGTH_LONG).show();
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("error").equals("false")) {
+                                Log.d(TAG, jsonResponse.toString());
+                                Toast.makeText(RegisterActivity.this, jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(LoginActivityIntent);
                                 finish();
@@ -231,16 +211,12 @@ public class RegisterActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(getApplicationContext(), "That didn't work!", Toast.LENGTH_LONG).show();
-//                Log.d(TAG, "Error" + error.getMessage());
-
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String strJSONError = new String(networkResponse.data);
                     JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
-//                        Log.d(TAG,errorJSON.getString("message").toString());
                         Toast.makeText(RegisterActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -256,7 +232,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public byte[] getBody() {
-                return savedata.getBytes(StandardCharsets.UTF_8);
+                return saveData.getBytes(StandardCharsets.UTF_8);
             }
 
         };
