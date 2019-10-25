@@ -1,5 +1,6 @@
 package com.team09.hwealth;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,12 +35,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class StepsFragment extends Fragment {
     private static final String TAG = "StepsActivity";
     private static final String STEP_URL = "https://hwealth.herokuapp.com/api/steps-record";
     private RequestQueue mQueue;
+    private static final String SHAREDPREF = "SHAREDPREF";
+
+    private SharedPreferences prefs;
 
     @Nullable
     @Override
@@ -48,6 +50,8 @@ public class StepsFragment extends Fragment {
         final String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         Button createSteps = view.findViewById(R.id.createStepsButton);
         Button retrieveSteps = view.findViewById(R.id.retrieveStepsButton);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+
         //step fixed at 199 for testing
         final int step = 199;
         createSteps.setOnClickListener(new View.OnClickListener() {
@@ -129,12 +133,23 @@ public class StepsFragment extends Fragment {
 
             @Override
             public Map<String, String> getHeaders() {
-                SharedPreferences sharedPref = Objects.requireNonNull(getActivity()).getSharedPreferences("token", MODE_PRIVATE);
-                String token = sharedPref.getString("token", null);
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
+
+                String iv = prefs.getString("keyIv", "null");
+                String encrypted = prefs.getString("encryptedKey", "");
+                try {
+                    Cryptor cryptor = new Cryptor();
+                    cryptor.initKeyStore();
+                    String decrypted = cryptor.decryptText(encrypted, iv);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + decrypted);
+                    return headers;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
+
 
             @Override
             public byte[] getBody() {
@@ -192,11 +207,21 @@ public class StepsFragment extends Fragment {
 
             @Override
             public Map<String, String> getHeaders() {
-                SharedPreferences sharedPref = Objects.requireNonNull(getActivity()).getSharedPreferences("token", MODE_PRIVATE);
-                String token = sharedPref.getString("token", null);
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + token);
-                return headers;
+
+                String iv = prefs.getString("keyIv", "null");
+                String encrypted = prefs.getString("encryptedKey", "");
+                try {
+                    Cryptor cryptor = new Cryptor();
+                    cryptor.initKeyStore();
+                    String decrypted = cryptor.decryptText(encrypted, iv);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + decrypted);
+                    return headers;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
 
             @Override
