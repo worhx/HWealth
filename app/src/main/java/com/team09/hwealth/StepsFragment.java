@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -91,7 +92,7 @@ public class StepsFragment extends Fragment {
     private void Submit(JSONObject data,View view) {
         String URL = "https://hwealth.herokuapp.com/api/steps-record";
         final String savedata = data.toString();
-        mQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
@@ -101,7 +102,7 @@ public class StepsFragment extends Fragment {
                             JSONObject objres = new JSONObject(response);
                             if (objres.getString("error").equals("false")) {
                                 Log.d(TAG, objres.toString());
-                                Toast.makeText(getActivity().getApplicationContext(), objres.getString("message"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), objres.getString("message"), Toast.LENGTH_LONG).show();
                                 currentStepTV.setText(objres.getString("message"));
                             }
 
@@ -120,9 +121,9 @@ public class StepsFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
 //                        Log.d(TAG,errorJSON.getString("message").toString());
-                        Toast.makeText(getActivity().getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
-                        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -135,7 +136,7 @@ public class StepsFragment extends Fragment {
 
             @Override
             public Map<String, String> getHeaders() {
-                SharedPreferences sharedPref = getActivity().getSharedPreferences("token", MODE_PRIVATE);
+                SharedPreferences sharedPref = Objects.requireNonNull(getActivity()).getSharedPreferences("token", MODE_PRIVATE);
                 String token = sharedPref.getString("token", null);
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
@@ -155,7 +156,7 @@ public class StepsFragment extends Fragment {
     private void Retrieve(JSONObject data,View view) {
         String URL = "https://hwealth.herokuapp.com/api/steps-record";
         final String savedata = data.toString();
-        mQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 new Response.Listener<String>() {
@@ -187,9 +188,9 @@ public class StepsFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
 //                        Log.d(TAG,errorJSON.getString("message").toString());
-                        Toast.makeText(getActivity().getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
-                        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -202,7 +203,7 @@ public class StepsFragment extends Fragment {
 
             @Override
             public Map<String, String> getHeaders() {
-                SharedPreferences sharedPref = getActivity().getSharedPreferences("token", MODE_PRIVATE);
+                SharedPreferences sharedPref = Objects.requireNonNull(getActivity()).getSharedPreferences("token", MODE_PRIVATE);
                 String token = sharedPref.getString("token", null);
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
