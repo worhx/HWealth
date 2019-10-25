@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -86,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject objres = new JSONObject(response);
-                    if (objres.getString("error") == "false") {
+                    if (objres.getString("error").equals("false")) {
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
                         SharedPreferences.Editor editor = getSharedPreferences("token", MODE_PRIVATE).edit();
                         editor.putString("token", objres.getString("token"));
@@ -111,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String strJSONError = new String(networkResponse.data);
-                    JSONObject errorJSON = null;
+                    JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
 //                        Log.d(TAG,errorJSON.getString("message").toString());
@@ -129,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
+            public byte[] getBody() {
                 return savedata.getBytes(StandardCharsets.UTF_8);
             }
 

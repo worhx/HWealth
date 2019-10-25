@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -99,7 +98,7 @@ public class StepsActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject objres = new JSONObject(response);
-                            if (objres.getString("error") == "false") {
+                            if (objres.getString("error").equals("false")) {
                                 Log.d(TAG, objres.toString());
                                 Toast.makeText(StepsActivity.this, objres.getString("message"), Toast.LENGTH_LONG).show();
                                 currentStepTV.setText(objres.getString("message"));
@@ -116,7 +115,7 @@ public class StepsActivity extends AppCompatActivity {
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String strJSONError = new String(networkResponse.data);
-                    JSONObject errorJSON = null;
+                    JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
 //                        Log.d(TAG,errorJSON.getString("message").toString());
@@ -134,18 +133,18 @@ public class StepsActivity extends AppCompatActivity {
             }
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 SharedPreferences sharedPref = getSharedPreferences("token", MODE_PRIVATE);
                 String token = sharedPref.getString("token", null);
-                HashMap<String, String> headers = new HashMap<String, String>();
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
 //                Log.d(TAG,token);
                 return headers;
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                return savedata == null ? null : savedata.getBytes(StandardCharsets.UTF_8);
+            public byte[] getBody() {
+                return savedata.getBytes(StandardCharsets.UTF_8);
             }
 
         };
@@ -163,7 +162,7 @@ public class StepsActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject objres = new JSONObject(response);
-                            if (objres.getString("error") == "false") {
+                            if (objres.getString("error").equals("false")) {
                                 Log.d(TAG, objres.toString());
 //                                Toast.makeText(StepsActivity.this, objres.getString("records"), Toast.LENGTH_LONG).show();
                                 JSONArray recordsJSONArr = new JSONArray(objres.getString("records"));
@@ -183,7 +182,7 @@ public class StepsActivity extends AppCompatActivity {
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String strJSONError = new String(networkResponse.data);
-                    JSONObject errorJSON = null;
+                    JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
 //                        Log.d(TAG,errorJSON.getString("message").toString());
@@ -201,17 +200,17 @@ public class StepsActivity extends AppCompatActivity {
             }
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 SharedPreferences sharedPref = getSharedPreferences("token", MODE_PRIVATE);
                 String token = sharedPref.getString("token", null);
-                HashMap<String, String> headers = new HashMap<String, String>();
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
 //                Log.d(TAG,token);
                 return headers;
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
+            public byte[] getBody() {
                 return savedata.getBytes(StandardCharsets.UTF_8);
             }
 

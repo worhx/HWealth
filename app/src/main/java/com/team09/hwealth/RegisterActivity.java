@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -174,7 +173,7 @@ public class RegisterActivity extends AppCompatActivity {
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String strJSONError = new String(networkResponse.data);
-                    JSONObject errorJSON = null;
+                    JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
 //                        Log.d(TAG,errorJSON.getString("message").toString());
@@ -192,7 +191,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
+            public byte[] getBody() {
                 return savedata.getBytes(StandardCharsets.UTF_8);
             }
 
@@ -215,7 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
                             JSONObject objres = new JSONObject(response);
 //                            Log.d(TAG, objres.toString());
                             //Toast.makeText(getApplicationContext(), "Response is: " + response.substring(0, 500), Toast.LENGTH_LONG).show();
-                            if (objres.getString("error") == "false") {
+                            if (objres.getString("error").equals("false")) {
                                 Log.d(TAG, objres.toString());
                                 Toast.makeText(RegisterActivity.this, objres.getString("message"), Toast.LENGTH_LONG).show();
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -238,7 +237,7 @@ public class RegisterActivity extends AppCompatActivity {
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String strJSONError = new String(networkResponse.data);
-                    JSONObject errorJSON = null;
+                    JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
 //                        Log.d(TAG,errorJSON.getString("message").toString());
@@ -256,7 +255,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
+            public byte[] getBody() {
                 return savedata.getBytes(StandardCharsets.UTF_8);
             }
 
