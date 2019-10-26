@@ -5,12 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.team09.hwealth.MainActivity">
+
     <RelativeLayout
         android:id="@+id/profileImg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
-        android:background="@color/followingBg">
+        android:background="@color/followersBg"
+        android:paddingBottom="20dp">
 
 
         <ImageButton
@@ -188,10 +189,11 @@
                 android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/dobTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/sample_dob"
+                android:text="@string/nil"
                 android:textColor="#000000"
                 android:textSize="18sp" />
 
@@ -217,10 +219,11 @@
                 android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/genderTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/female"
+                android:text="@string/nil"
                 android:textColor="#000000"
                 android:textSize="18sp" />
 
@@ -246,10 +249,11 @@
                 android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/emailTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/email_add"
+                android:text="@string/nil"
                 android:textColor="#000000"
                 android:textSize="18sp" />
 

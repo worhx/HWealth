@@ -35,6 +35,7 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final String PROFILE_URL = "https://hwealth.herokuapp.com/api/profile";
+    private static final String ACCOUNT_URL = "https://hwealth.herokuapp.com/api/account";
     private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
     private SharedPreferences prefs;
@@ -46,7 +47,8 @@ public class ProfileFragment extends Fragment {
         ImageButton setting = view.findViewById(R.id.setting);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         JSONObject send = new JSONObject();
-        Retrieve(send, view);
+        RetrieveProfile(send, view);
+        RetrieveAccount(send, view);
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,7 +59,7 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void Retrieve(JSONObject data, View view) {
+    private void RetrieveProfile(JSONObject data, View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         final TextView nameTextView = view.findViewById(R.id.fullNameTV);
@@ -72,6 +74,78 @@ public class ProfileFragment extends Fragment {
                                 JSONObject jsonProfile = new JSONObject(jsonResponse.getString("profile"));
                                 Log.d(TAG, jsonProfile.toString());
                                 nameTextView.setText(jsonProfile.getString("fullname"));
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+
+                String iv = prefs.getString("keyIv", "null");
+                String encrypted = prefs.getString("encryptedKey", "");
+                try {
+                    Cryptor cryptor = new Cryptor();
+                    cryptor.initKeyStore();
+                    String decrypted = cryptor.decryptText(encrypted, iv);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + decrypted);
+                    return headers;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            public byte[] getBody() {
+                return saveData.getBytes(StandardCharsets.UTF_8);
+            }
+
+        };
+        mQueue.add(stringRequest);
+    }
+
+    private void RetrieveAccount(JSONObject data, View view) {
+        final String saveData = data.toString();
+        mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        final TextView emailTextView = view.findViewById(R.id.emailTV);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, ACCOUNT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("error").equals("false")) {
+                                Log.d(TAG, jsonResponse.toString());
+                                JSONObject jsonProfile = new JSONObject(jsonResponse.getString("account"));
+                                Log.d(TAG, jsonProfile.toString());
+                                emailTextView.setText(jsonProfile.getString("email"));
                             }
 
                         } catch (JSONException e) {
