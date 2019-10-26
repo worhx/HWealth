@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -51,7 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         prefs = getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         mQueue = Volley.newRequestQueue(this);
-
+        userET.requestFocus();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         login.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
