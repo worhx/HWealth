@@ -31,7 +31,7 @@
 
         </RelativeLayout>
         <TextView
-            android:id="@+id/userNameTV"
+            android:id="@+id/userTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgUser"
@@ -184,6 +184,7 @@
                     android:textSize="13sp" />
 
                 <EditText
+                    android:id="@+id/dobET"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
@@ -214,7 +215,7 @@
 
                 <EditText
                     android:inputType="textEmailAddress"
-                    android:id="@+id/emailTV"
+                    android:id="@+id/emailET"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"

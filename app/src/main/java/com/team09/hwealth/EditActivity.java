@@ -37,6 +37,7 @@ public class EditActivity extends AppCompatActivity {
     private EditText height;
     private EditText weight;
     private TextView name;
+    private EditText email;
     private RequestQueue mQueue;
     private SharedPreferences prefs;
     @Override
@@ -48,12 +49,14 @@ public class EditActivity extends AppCompatActivity {
         ImageButton proceed = findViewById(R.id.tickEdit);
         height = findViewById(R.id.heightET);
         weight = findViewById(R.id.weightET);
+        name = findViewById(R.id.userTV);
         bmi = findViewById(R.id.bmiET);
-        name = findViewById(R.id.userNameTV);
+        email = findViewById(R.id.emailET);
         height.setText(getIntent().getStringExtra("height"));
         weight.setText(getIntent().getStringExtra("weight"));
         bmi.setText(getIntent().getStringExtra("bmi"));
         name.setText(getIntent().getStringExtra("name"));
+        email.setText(getIntent().getStringExtra("email"));
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
