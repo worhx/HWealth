@@ -24,6 +24,7 @@
     <string name="sample_weight">67 KG</string>
     <string name="sample_height">177 CM</string>
     <string name="sample_bmi">21.4</string>
+    <string name="nil">-</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="settings">Settings</string>
 
