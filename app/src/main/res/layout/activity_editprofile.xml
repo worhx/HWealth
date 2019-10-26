@@ -31,7 +31,7 @@
 
         </RelativeLayout>
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/userNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgUser"
@@ -68,7 +68,7 @@
 
                 <EditText
                     android:id="@+id/heightET"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
@@ -140,7 +140,6 @@
                     android:inputType="numberDecimal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/nil"
                     android:textColor="@color/white"
                     android:textSize="25sp" />
 

@@ -37,12 +37,16 @@ public class ProfileFragment extends Fragment {
     private static final String PROFILE_URL = "https://hwealth.herokuapp.com/api/profile";
     private static final String ACCOUNT_URL = "https://hwealth.herokuapp.com/api/account";
     private static final String SHAREDPREF = "SHAREDPREF";
+    private String height;
+    private String weight;
+    private String bmi;
+    private String name;
     private RequestQueue mQueue;
     private SharedPreferences prefs;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ImageButton setting = view.findViewById(R.id.setting);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
@@ -53,7 +57,12 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), EditActivity.class);
+                intent.putExtra("height", height);
+                intent.putExtra("weight", weight);
+                intent.putExtra("bmi", bmi);
+                intent.putExtra("name", name);
                 startActivity(intent);
+
             }
         });
         return view;
@@ -62,6 +71,9 @@ public class ProfileFragment extends Fragment {
     private void RetrieveProfile(JSONObject data, View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        final TextView heightTextView = view.findViewById(R.id.heightTV);
+        final TextView weightTextView = view.findViewById(R.id.weightTV);
+        final TextView bmiTextView = view.findViewById(R.id.bmiTV);
         final TextView nameTextView = view.findViewById(R.id.fullNameTV);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, PROFILE_URL,
                 new Response.Listener<String>() {
@@ -73,7 +85,16 @@ public class ProfileFragment extends Fragment {
                                 Log.d(TAG, jsonResponse.toString());
                                 JSONObject jsonProfile = new JSONObject(jsonResponse.getString("profile"));
                                 Log.d(TAG, jsonProfile.toString());
-                                nameTextView.setText(jsonProfile.getString("fullname"));
+                                name = jsonProfile.getString("fullname");
+                                nameTextView.setText(name);
+                                if (jsonProfile.has("weight") && jsonProfile.has("height") && jsonProfile.has("bmi")) {
+                                    height = jsonProfile.getString("height");
+                                    weight = jsonProfile.getString("weight");
+                                    bmi = jsonProfile.getString("bmi");
+                                    weightTextView.setText(weight);
+                                    heightTextView.setText(height);
+                                    bmiTextView.setText(bmi);
+                                }
                             }
 
                         } catch (JSONException e) {

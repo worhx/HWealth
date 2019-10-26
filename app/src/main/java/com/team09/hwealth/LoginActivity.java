@@ -63,10 +63,6 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject send = new JSONObject();
                     try {
                         send.put("username", userString);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
                         send.put("password",passString);
                     } catch (JSONException e) {
                         e.printStackTrace();
