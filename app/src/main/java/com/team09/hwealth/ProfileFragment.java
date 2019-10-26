@@ -41,6 +41,7 @@ public class ProfileFragment extends Fragment {
     private String weight;
     private String bmi;
     private String name;
+    private String email;
     private RequestQueue mQueue;
     private SharedPreferences prefs;
 
@@ -61,6 +62,7 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra("weight", weight);
                 intent.putExtra("bmi", bmi);
                 intent.putExtra("name", name);
+                intent.putExtra("email", email);
                 startActivity(intent);
 
             }
@@ -155,7 +157,7 @@ public class ProfileFragment extends Fragment {
     private void RetrieveAccount(JSONObject data, View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        final TextView emailTextView = view.findViewById(R.id.emailTV);
+        final TextView emailTextView = view.findViewById(R.id.emailET);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, ACCOUNT_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -166,7 +168,8 @@ public class ProfileFragment extends Fragment {
                                 Log.d(TAG, jsonResponse.toString());
                                 JSONObject jsonProfile = new JSONObject(jsonResponse.getString("account"));
                                 Log.d(TAG, jsonProfile.toString());
-                                emailTextView.setText(jsonProfile.getString("email"));
+                                email = jsonProfile.getString("email");
+                                emailTextView.setText(email);
                             }
 
                         } catch (JSONException e) {

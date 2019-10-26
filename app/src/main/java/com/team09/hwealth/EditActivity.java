@@ -36,6 +36,7 @@ public class EditActivity extends AppCompatActivity {
     private EditText bmi;
     private EditText height;
     private EditText weight;
+    private EditText email;
     private TextView name;
     private RequestQueue mQueue;
     private SharedPreferences prefs;
@@ -49,11 +50,13 @@ public class EditActivity extends AppCompatActivity {
         height = findViewById(R.id.heightET);
         weight = findViewById(R.id.weightET);
         bmi = findViewById(R.id.bmiET);
+        email = findViewById(R.id.emailET);
         name = findViewById(R.id.userNameTV);
         height.setText(getIntent().getStringExtra("height"));
         weight.setText(getIntent().getStringExtra("weight"));
         bmi.setText(getIntent().getStringExtra("bmi"));
         name.setText(getIntent().getStringExtra("name"));
+        email.setText(getIntent().getStringExtra("email"));
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
