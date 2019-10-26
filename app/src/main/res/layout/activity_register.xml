@@ -66,7 +66,7 @@
         android:textColor="@color/address" />
 
     <TextView
-        android:id="@+id/emailET"
+        android:id="@+id/emailTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/email"
