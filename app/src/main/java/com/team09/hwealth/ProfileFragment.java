@@ -70,6 +70,25 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        JSONObject send = new JSONObject();
+        RetrieveAccount(send, Objects.requireNonNull(super.getView()));
+        RetrieveProfile(send, super.getView());
+        Log.d(TAG, "onresume");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        JSONObject send = new JSONObject();
+        RetrieveAccount(send, Objects.requireNonNull(super.getView()));
+        RetrieveProfile(send, super.getView());
+        Log.d(TAG, "onstart");
+
+    }
+
     private void RetrieveProfile(JSONObject data, View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
