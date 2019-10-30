@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        Button twoFAButton = view.findViewById(R.id.twoFAButton);
         ImageButton setting = view.findViewById(R.id.setting);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         JSONObject send = new JSONObject();
@@ -65,6 +67,13 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra("email", email);
                 startActivity(intent);
 
+            }
+        });
+        twoFAButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent TwoFAActivity = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), TwoFAActivity.class);
+                startActivity(TwoFAActivity);
             }
         });
         return view;

@@ -32,6 +32,11 @@
     <string name="profile_pic">Profile Picture</string>
     <string name="forget_password">Forget Password</string>
     <string name="reset_password">Reset Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="enter_security_code">Enter Security Code</string>
+    <string name="confirm_security_code">Confirm Security Code</string>
+    <string name="setup_2FA">Setup 2FA</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

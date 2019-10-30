@@ -11,7 +11,8 @@
         android:roundIcon="@drawable/hwealthlogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ForgetPasswordActivity"></activity>
+        <activity android:name=".TwoFAActivity"></activity>
+        <activity android:name=".ForgetPasswordActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".EditActivity" />

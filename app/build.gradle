@@ -34,6 +34,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     implementation 'com.google.android.gms:play-services-safetynet:17.0.0'
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
-
+    implementation 'com.google.zxing:core:3.3.0'
 
 }

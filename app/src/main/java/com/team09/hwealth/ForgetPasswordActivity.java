@@ -2,6 +2,7 @@ package com.team09.hwealth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,10 +39,11 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         resetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (email.getText().toString().trim().length() != 0) {
+                if (email.getText() != null) {
                     JSONObject send = new JSONObject();
                     try {
                         send.put("email", email.getText().toString());
+                        Log.d(TAG, "text");
                         Submit(send);
                     } catch (JSONException e) {
                         e.printStackTrace();

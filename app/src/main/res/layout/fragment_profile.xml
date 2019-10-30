@@ -268,4 +268,10 @@
 
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/twoFAButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/setup_2FA" />
 </LinearLayout>

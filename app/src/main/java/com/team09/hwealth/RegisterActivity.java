@@ -119,7 +119,6 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-
     public void verifyTokenOnServer(String token, final JSONObject submit) {
         JSONObject tokenJSON = new JSONObject();
         try {
@@ -182,8 +181,6 @@ public class RegisterActivity extends AppCompatActivity {
         mQueue.add(stringRequest);
     }
 
-
-
     private void Submit(JSONObject data) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(getApplicationContext());
@@ -201,7 +198,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 startActivity(LoginActivityIntent);
                                 finish();
                             }
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
