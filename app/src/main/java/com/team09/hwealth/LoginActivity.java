@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -41,10 +40,12 @@ public class LoginActivity extends AppCompatActivity {
     private RequestQueue mQueue;
     private ProgressBar progressBar;
     private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Button forgetPassword = findViewById(R.id.forgetPasswordButton);
         Button login = findViewById(R.id.login);
         Button register = findViewById(R.id.registerButton);
         final EditText userET = findViewById(R.id.userET);
@@ -52,9 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         prefs = getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         mQueue = Volley.newRequestQueue(this);
-        userET.requestFocus();
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        login.setOnClickListener(new View.OnClickListener(){
+        login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String userString = userET.getText().toString();
@@ -63,11 +62,11 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject send = new JSONObject();
                     try {
                         send.put("username", userString);
-                        send.put("password",passString);
+                        send.put("password", passString);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Log.d(TAG,send.toString());
+                    Log.d(TAG, send.toString());
                     progressBar.setVisibility(View.VISIBLE);
                     Submit(send);
                 } else {
@@ -84,10 +83,17 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(RegisterActivityIntent);
             }
         });
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ForgetPasswordIntent = new Intent(getApplicationContext(), ForgetPasswordActivity.class);
+                startActivity(ForgetPasswordIntent);
+            }
+        });
     }
+
     ////Submit
-    private void Submit(JSONObject data)
-    {
+    private void Submit(JSONObject data) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(getApplicationContext());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL, new Response.Listener<String>() {

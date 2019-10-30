@@ -30,6 +30,8 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="profile_pic">Profile Picture</string>
+    <string name="forget_password">Forget Password</string>
+    <string name="reset_password">Reset Password</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -56,13 +56,27 @@
         android:background="@color/followingBg"
         android:text="@string/login" />
 
-    <Button
-        android:id="@+id/registerButton"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:text="@string/register" />
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/registerButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register" />
+
+        <Button
+            android:id="@+id/forgetPasswordButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forget_password" />
+    </LinearLayout>
+
 
     <ProgressBar
         android:id="@+id/progressBar"
