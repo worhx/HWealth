@@ -1,12 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="steps"
-        android:textSize="30px"/>
+            <TextView
+                android:id="@+id/stepsTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/steps"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/currentStepsTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/null_steps"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/createStepsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_steps" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/retrieveStepsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/retrieve_steps" />
+            </LinearLayout>
+
+
+</LinearLayout>

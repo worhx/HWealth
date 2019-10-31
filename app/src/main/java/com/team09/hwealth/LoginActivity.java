@@ -1,14 +1,19 @@
 package com.team09.hwealth;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -19,74 +24,121 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
-import androidx.appcompat.app.AppCompatActivity;
+import javax.crypto.NoSuchPaddingException;
+
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
+    private static final String LOGIN_URL = "https://hwealth.herokuapp.com/api/auth/login";
+    private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
+    private ProgressBar progressBar;
+    private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Button forgetPassword = findViewById(R.id.forgetPasswordButton);
         Button login = findViewById(R.id.login);
-        final EditText idET = findViewById(R.id.idET);
+        Button register = findViewById(R.id.registerButton);
+        final EditText userET = findViewById(R.id.userET);
         final EditText passET = findViewById(R.id.passwordET);
+        progressBar = findViewById(R.id.progressBar);
+        prefs = getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         mQueue = Volley.newRequestQueue(this);
-        login.setOnClickListener(new View.OnClickListener(){
+        login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String idString = idET.getText().toString();
+                String userString = userET.getText().toString();
                 String passString = passET.getText().toString();
-                JSONObject send = new JSONObject();
-                try {
-                    send.put("username",idString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (!userString.isEmpty() || !passString.isEmpty()) {
+                    JSONObject send = new JSONObject();
+                    try {
+                        send.put("username", userString);
+                        send.put("password", passString);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d(TAG, send.toString());
+                    progressBar.setVisibility(View.VISIBLE);
+                    Submit(send);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
                 }
-                try {
-                    send.put("password",passString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d(TAG,send.toString());
-                Submit(send);
+
+
+            }
+        });
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent RegisterActivityIntent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(RegisterActivityIntent);
+            }
+        });
+        forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ForgetPasswordIntent = new Intent(getApplicationContext(), ForgetPasswordActivity.class);
+                startActivity(ForgetPasswordIntent);
             }
         });
     }
+
     ////Submit
-    private void Submit(JSONObject data)
-    {
-        String URL="https://jsonplaceholder.typicode.com/posts";
-        final String savedata = data.toString();
+    private void Submit(JSONObject data) {
+        final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    //correct response
-                    JSONObject objres=new JSONObject(response);
-                    JSONObject fakeresult = new JSONObject();
-                    fakeresult.put("error","false");
-                    fakeresult.put("username","jerrylim");
-                    fakeresult.put("token","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDkwODMwZDZmY2U0ODQxMzBmMmQwZGEiLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE1Njk4MjYzNjAsImV4cCI6MTU2OTgyOlp2MH0.-xkuijaih-YDz6XpEJCAXMi8jVaxoVqoLafKcJhaF2E");
-                    if(!Boolean.parseBoolean(fakeresult.getString("error"))){
-                        Intent MainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(MainActivityIntent);
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(),"else",Toast.LENGTH_SHORT);
+                    JSONObject jsonResponse = new JSONObject(response);
+                    if (jsonResponse.getString("error").equals("false")) {
+                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                        Log.d(TAG, jsonResponse.getString("token"));
+                        String token = jsonResponse.getString("token");
+                        Cryptor cryptor = new Cryptor();
+                        try {
+                            cryptor.setIv();
+                            prefs.edit().putString("encryptedKey", cryptor.encryptText(token)).apply();
+                            prefs.edit().putString("keyIv", cryptor.getIv_string()).apply();
+                            Intent StepsActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(StepsActivityIntent);
+                            finish();
+                        } catch (NoSuchPaddingException | NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException | InvalidKeyException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(getApplicationContext(),"Server Error",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+                        Toast.makeText(LoginActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
+                }
             }
         }) {
             @Override
@@ -95,17 +147,14 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return savedata == null ? null : savedata.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    //Log.v("Unsupported Encoding while trying to get the bytes", data);
-                    return null;
-                }
+            public byte[] getBody() {
+                return saveData.getBytes(StandardCharsets.UTF_8);
             }
 
         };
         mQueue.add(stringRequest);
     }
+
+
 }
 

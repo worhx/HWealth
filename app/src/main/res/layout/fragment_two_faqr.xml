@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TwoFAQRFragment">
+
+    <TextView
+        android:id="@+id/scanQRTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/scan_qr_code"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/securityCodeTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/confirm_security_code"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/enterPinTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/enter_security_code"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/qrET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/confirmSecurityCodeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/buttonBarButtonStyle"
+        android:background="@color/colorAccent"
+        android:textColor="@color/white"
+        android:text="@string/confirm_security_code" />
+
+    <TextView
+        android:id="@+id/recoveryCodeTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textIsSelectable="true" />
+
+</LinearLayout>
