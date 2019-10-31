@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,94 +28,59 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.NoSuchPaddingException;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
-
-public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "LoginActivity";
-    private static final String LOGIN_URL = "https://hwealth.herokuapp.com/api/auth/login";
+public class LoginTwoFAActivity extends AppCompatActivity {
+    private static final String VERIFY_TWO_FA = "https://hwealth.herokuapp.com/api/two-factor/authenticate";
     private static final String SHAREDPREF = "SHAREDPREF";
+    private static String TAG = "LoginTwoFAActivity";
     private RequestQueue mQueue;
-    private ProgressBar progressBar;
     private SharedPreferences prefs;
-    private boolean handledClick = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        Button forgetPassword = findViewById(R.id.forgetPasswordButton);
-        Button login = findViewById(R.id.login);
-        Button register = findViewById(R.id.registerButton);
-        final EditText userET = findViewById(R.id.userET);
-        final EditText passET = findViewById(R.id.passwordET);
-        progressBar = findViewById(R.id.progressBar);
+        setContentView(R.layout.activity_login_two_fa);
+        Button confirmSixDigitCodeButton = findViewById(R.id.confirmSixDigitCodeButton);
         prefs = getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
-        mQueue = Volley.newRequestQueue(this);
-        login.setOnClickListener(new View.OnClickListener() {
+
+        confirmSixDigitCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (!handledClick) {
-                    handledClick = true;
-                    String userString = userET.getText().toString();
-                    String passString = passET.getText().toString();
-                    if (!userString.isEmpty() || !passString.isEmpty()) {
-                        JSONObject send = new JSONObject();
-                        try {
-                            send.put("username", userString);
-                            send.put("password", passString);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d(TAG, send.toString());
-                        progressBar.setVisibility(View.VISIBLE);
-                        Submit(send);
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
-                        handledClick = false;
+            public void onClick(View v) {
+                EditText sixDigitCodeET = findViewById(R.id.sixDigitCodeET);
+                if (sixDigitCodeET.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(), "Please Enter Code", Toast.LENGTH_LONG).show();
+                } else if (!(sixDigitCodeET.getText().toString().equals("")) && (sixDigitCodeET.getText().toString().matches("^[0-9]{6}$"))) {
+                    JSONObject sixDigitJSON = new JSONObject();
+                    try {
+                        sixDigitJSON.put("token", sixDigitCodeET.getText().toString());
+                        Submit(sixDigitJSON);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please Enter Six Digits", Toast.LENGTH_LONG).show();
+
                 }
-
-            }
-        });
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent RegisterActivityIntent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(RegisterActivityIntent);
-            }
-        });
-        forgetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent ForgetPasswordIntent = new Intent(getApplicationContext(), ForgetPasswordActivity.class);
-                startActivity(ForgetPasswordIntent);
             }
         });
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        progressBar.setVisibility(View.GONE);
-        handledClick = false;
-
-    }
-
-    ////Submit
     private void Submit(JSONObject data) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, VERIFY_TWO_FA, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
-                    if ((jsonResponse.getString("error").equals("false") && jsonResponse.getString("twoFactorEnabled").equals("false"))) {
-                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
-                        progressBar.setVisibility(View.GONE);
+                    if (jsonResponse.getString("error").equals("false")) {
+                        Toast.makeText(LoginTwoFAActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
                         Log.d(TAG, jsonResponse.getString("token"));
                         String token = jsonResponse.getString("token");
                         Cryptor cryptor = new Cryptor();
@@ -132,12 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                    } else if ((jsonResponse.getString("error").equals("false")) && (jsonResponse.getString("twoFactorEnabled").equals("true"))) {
-                        Cryptor cryptor = new Cryptor();
-                        prefs.edit().putString("encryptedKey", cryptor.encryptText(jsonResponse.getString("token"))).apply();
-                        prefs.edit().putString("keyIv", cryptor.getIv_string()).apply();
-                        Intent LoginTwoFAActivityIntent = new Intent(getApplicationContext(), LoginTwoFAActivity.class);
-                        startActivity(LoginTwoFAActivityIntent);
                     }
                 } catch (JSONException e) {
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -146,16 +104,13 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
-                handledClick = false;
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String strJSONError = new String(networkResponse.data);
                     JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
-                        Toast.makeText(LoginActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
-                        handledClick = false;
+                        Toast.makeText(LoginTwoFAActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -169,6 +124,25 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
+            public Map<String, String> getHeaders() {
+
+                String iv = prefs.getString("keyIv", "null");
+                String encrypted = prefs.getString("encryptedKey", "");
+                try {
+                    Cryptor cryptor = new Cryptor();
+                    cryptor.initKeyStore();
+                    String decrypted = cryptor.decryptText(encrypted, iv);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + decrypted);
+                    return headers;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
             public byte[] getBody() {
                 return saveData.getBytes(StandardCharsets.UTF_8);
             }
@@ -177,6 +151,4 @@ public class LoginActivity extends AppCompatActivity {
         mQueue.add(stringRequest);
     }
 
-
 }
-

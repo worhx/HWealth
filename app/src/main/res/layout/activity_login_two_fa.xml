@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TwoFAFragment">
+
+
+    <TextView
+        android:id="@+id/sixDigitCodeTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/six_digit_code"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/sixDigitCodeET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/six_digit_code_sample"
+        android:inputType="text"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <Button
+        android:id="@+id/confirmSixDigitCodeButton"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:text="@string/confirm_six_digit_code"
+        android:textColor="@color/white" />
+
+</LinearLayout>

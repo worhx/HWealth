@@ -38,6 +38,9 @@
     <string name="confirm_security_code">Confirm Security Code</string>
     <string name="setup_2FA">Setup 2FA</string>
     <string name="logout">Logout</string>
+    <string name="six_digit_code">Enter Six Digit Code</string>
+    <string name="six_digit_code_sample">123456</string>
+    <string name="confirm_six_digit_code">Confirm Six Digit Code</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
