@@ -276,7 +276,7 @@
         android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/setup_2FA" />
+        android:text="@string/setup_two_FA" />
 
     <Button
         android:id="@+id/logoutButton"

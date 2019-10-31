@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 public class EditActivity extends AppCompatActivity {
     private static final String TAG = "EditActivity";
     private static final String UPDATE_BMI_URL = "https://hwealth.herokuapp.com/api/profile/update-bmi";
@@ -62,6 +64,7 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         proceed.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +81,9 @@ public class EditActivity extends AppCompatActivity {
                 }
                 Submit(send);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
             }
         });
     }

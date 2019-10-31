@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -29,8 +30,11 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.Objects;
 
 import javax.crypto.NoSuchPaddingException;
+
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private RequestQueue mQueue;
     private ProgressBar progressBar;
     private SharedPreferences prefs;
-
+    private boolean handledClick = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,23 +60,33 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String userString = userET.getText().toString();
-                String passString = passET.getText().toString();
-                if (!userString.isEmpty() || !passString.isEmpty()) {
-                    JSONObject send = new JSONObject();
+                if (!handledClick) {
+                    handledClick = true;
                     try {
-                        send.put("username", userString);
-                        send.put("password", passString);
-                    } catch (JSONException e) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                        String userString = userET.getText().toString();
+                        String passString = passET.getText().toString();
+                        if (!userString.isEmpty() || !passString.isEmpty()) {
+                            JSONObject send = new JSONObject();
+                            try {
+                                send.put("username", userString);
+                                send.put("password", passString);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d(TAG, send.toString());
+                            progressBar.setVisibility(View.VISIBLE);
+                            Submit(send);
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
+                            handledClick = false;
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Log.d(TAG, send.toString());
-                    progressBar.setVisibility(View.VISIBLE);
-                    Submit(send);
-                } else {
-                    Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
-                }
 
+                }
 
             }
         });
@@ -92,6 +106,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        progressBar.setVisibility(View.GONE);
+        handledClick = false;
+
+    }
+
     ////Submit
     private void Submit(JSONObject data) {
         final String saveData = data.toString();
@@ -101,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
-                    if (jsonResponse.getString("error").equals("false")) {
+                    if ((jsonResponse.getString("error").equals("false") && jsonResponse.getString("twoFactorEnabled").equals("false"))) {
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                         Log.d(TAG, jsonResponse.getString("token"));
@@ -112,12 +134,19 @@ public class LoginActivity extends AppCompatActivity {
                             prefs.edit().putString("encryptedKey", cryptor.encryptText(token)).apply();
                             prefs.edit().putString("keyIv", cryptor.getIv_string()).apply();
                             Intent StepsActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            StepsActivityIntent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(StepsActivityIntent);
                             finish();
                         } catch (NoSuchPaddingException | NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException | InvalidKeyException e) {
                             e.printStackTrace();
                         }
 
+                    } else if ((jsonResponse.getString("error").equals("false")) && (jsonResponse.getString("twoFactorEnabled").equals("true"))) {
+                        Cryptor cryptor = new Cryptor();
+                        prefs.edit().putString("encryptedKey", cryptor.encryptText(jsonResponse.getString("token"))).apply();
+                        prefs.edit().putString("keyIv", cryptor.getIv_string()).apply();
+                        Intent LoginTwoFAActivityIntent = new Intent(getApplicationContext(), LoginTwoFAActivity.class);
+                        startActivity(LoginTwoFAActivityIntent);
                     }
                 } catch (JSONException e) {
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -127,6 +156,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
+                handledClick = false;
                 NetworkResponse networkResponse = error.networkResponse;
                 if (networkResponse != null && networkResponse.data != null) {
                     String strJSONError = new String(networkResponse.data);
@@ -134,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(LoginActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        handledClick = false;
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

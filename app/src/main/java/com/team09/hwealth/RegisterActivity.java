@@ -46,41 +46,50 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText userET = findViewById(R.id.userET);
         final EditText passET = findViewById(R.id.passwordET);
         final EditText emailET = findViewById(R.id.emailET);
+        final EditText confirmPasswordET = findViewById(R.id.confirmPasswordET);
         mQueue = Volley.newRequestQueue(this);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if ((fullNameET.getText().toString().equals("")) || (userET.getText().toString().equals("")) || (passET.getText().toString().equals(""))
+                        || (emailET.getText().toString().equals("")) || (confirmPasswordET.getText().toString().equals(""))) {
+                    Toast.makeText(getApplicationContext(), "Please do not leave fields empty", Toast.LENGTH_LONG).show();
+                } else if ((fullNameET.getText().length() < 5) || (userET.getText().length() < 5)) {
+                    Toast.makeText(getApplicationContext(), "Username or full name cannot be less than 5 characters ", Toast.LENGTH_LONG).show();
+                } else if (!fullNameET.getText().toString().matches("^[a-zA-Z0-9 ]*$")) {
+                    Toast.makeText(getApplicationContext(), "Full name should only contain letters", Toast.LENGTH_LONG).show();
+                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailET.getText().toString()).matches()) {
+                    Toast.makeText(getApplicationContext(), "Please enter valid email address", Toast.LENGTH_LONG).show();
+                } else if (!userET.getText().toString().matches("^[a-zA-Z0-9_]*$")) {
+                    Toast.makeText(getApplicationContext(), "Username should only contain upper and lowercase letters, numbers, and underscores", Toast.LENGTH_LONG).show();
+                } else if (!passET.getText().toString().matches("^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W).*$")) {
+                    Toast.makeText(getApplicationContext(), "Password should contain 1 uppercase, 1 lowercase, 1 special char, 1 number", Toast.LENGTH_LONG).show();
+                } else if (!passET.getText().toString().matches(confirmPasswordET.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_LONG).show();
 
-                String fullNameString = fullNameET.getText().toString();
-                String userString = userET.getText().toString();
-                String passString = passET.getText().toString();
-                String emailString = emailET.getText().toString();
-                JSONObject send = new JSONObject();
+                } else {
+                    String fullNameString = fullNameET.getText().toString();
+                    String userString = userET.getText().toString();
+                    String passString = passET.getText().toString();
+                    String emailString = emailET.getText().toString();
+                    JSONObject send = new JSONObject();
 
-                try {
-                    send.put("fullname", fullNameString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    try {
+                        send.put("fullname", fullNameString);
+                        send.put("username", userString);
+                        send.put("password", passString);
+                        send.put("email", emailString);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d(TAG, send.toString());
+                    validateCaptcha(send);
                 }
-                try {
-                    send.put("username", userString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    send.put("password", passString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    send.put("email", emailString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d(TAG, send.toString());
-                validateCaptcha(send);
             }
+
+
         });
     }
 
@@ -138,9 +147,6 @@ public class RegisterActivity extends AppCompatActivity {
                             if (jsonResponse.getString("success").equals("true")) {
                                 Log.d(TAG, jsonResponse.toString());
                                 Submit(submit);
-                                Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                                startActivity(LoginActivityIntent);
-                                finish();
                             }
 
 

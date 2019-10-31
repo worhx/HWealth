@@ -1,8 +1,10 @@
 package com.team09.hwealth;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +32,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 
 public class TwoFAFragment extends Fragment {
     private static final String TAG = "TwoFAFragment";
-    private static final String TWOFA_URL = "https://hwealth.herokuapp.com/api/two-factor/get-authenticator";
+    private static final String ENABLEWTWOFA_URL = "https://hwealth.herokuapp.com/api/two-factor/get-authenticator";
+    private static final String DIASBLETWOFA_URL = "https://hwealth.herokuapp.com/api/two-factor/disable";
     private static final String SHAREDPREF = "SHAREDPREF";
     View view;
     private Button confirmButton;
@@ -58,7 +63,12 @@ public class TwoFAFragment extends Fragment {
                     String passwordETStr = passwordET.getText().toString();
                     try {
                         send.put("password", passwordETStr);
-                        Submit(send);
+                        if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("2FA", false)) {
+                            DisableTwoFA(send);
+                        } else {
+                            EnableTwoFA(send);
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -73,10 +83,10 @@ public class TwoFAFragment extends Fragment {
 
     }
 
-    private void Submit(JSONObject data) {
+    private void EnableTwoFA(JSONObject data) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, TWOFA_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ENABLEWTWOFA_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -94,6 +104,78 @@ public class TwoFAFragment extends Fragment {
                                 fragmentTransaction.replace(R.id.frameLayout, fragment2);
                                 fragmentTransaction.commit();
 
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+
+                String iv = prefs.getString("keyIv", "null");
+                String encrypted = prefs.getString("encryptedKey", "");
+                try {
+                    Cryptor cryptor = new Cryptor();
+                    cryptor.initKeyStore();
+                    String decrypted = cryptor.decryptText(encrypted, iv);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + decrypted);
+                    return headers;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            public byte[] getBody() {
+                return saveData.getBytes(StandardCharsets.UTF_8);
+            }
+
+        };
+        mQueue.add(stringRequest);
+    }
+
+    private void DisableTwoFA(JSONObject data) {
+        final String saveData = data.toString();
+        mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DIASBLETWOFA_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("error").equals("false")) {
+                                Log.d(TAG, jsonResponse.toString());
+                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message") + " You will be logged out", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                                intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
                             }
 
                         } catch (JSONException e) {
