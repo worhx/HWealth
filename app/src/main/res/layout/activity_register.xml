@@ -67,6 +67,23 @@
         android:textColor="@color/colorPrimaryDark" />
 
     <TextView
+        android:id="@+id/confirmPasswordTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_password"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/confirmPasswordET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <TextView
         android:id="@+id/emailTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
