@@ -32,6 +32,8 @@ import java.security.NoSuchProviderException;
 
 import javax.crypto.NoSuchPaddingException;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -40,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private RequestQueue mQueue;
     private ProgressBar progressBar;
     private SharedPreferences prefs;
-
+    private boolean handledClick = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,23 +58,26 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String userString = userET.getText().toString();
-                String passString = passET.getText().toString();
-                if (!userString.isEmpty() || !passString.isEmpty()) {
-                    JSONObject send = new JSONObject();
-                    try {
-                        send.put("username", userString);
-                        send.put("password", passString);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                if (!handledClick) {
+                    handledClick = true;
+                    String userString = userET.getText().toString();
+                    String passString = passET.getText().toString();
+                    if (!userString.isEmpty() || !passString.isEmpty()) {
+                        JSONObject send = new JSONObject();
+                        try {
+                            send.put("username", userString);
+                            send.put("password", passString);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, send.toString());
+                        progressBar.setVisibility(View.VISIBLE);
+                        Submit(send);
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
+                        handledClick = false;
                     }
-                    Log.d(TAG, send.toString());
-                    progressBar.setVisibility(View.VISIBLE);
-                    Submit(send);
-                } else {
-                    Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
                 }
-
 
             }
         });
@@ -101,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
-                    if (jsonResponse.getString("error").equals("false")) {
+                    if ((jsonResponse.getString("error").equals("false") && jsonResponse.getString("twoFactorEnabled").equals("false"))) {
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                         Log.d(TAG, jsonResponse.getString("token"));
@@ -112,6 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                             prefs.edit().putString("encryptedKey", cryptor.encryptText(token)).apply();
                             prefs.edit().putString("keyIv", cryptor.getIv_string()).apply();
                             Intent StepsActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            StepsActivityIntent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(StepsActivityIntent);
                             finish();
                         } catch (NoSuchPaddingException | NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException | InvalidKeyException e) {
@@ -134,6 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(LoginActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        handledClick = false;
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

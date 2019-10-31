@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final String PROFILE_URL = "https://hwealth.herokuapp.com/api/profile";
@@ -82,6 +84,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent LoginActivity = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), LoginActivity.class);
+                LoginActivity.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(LoginActivity);
                 getActivity().finish();
             }
