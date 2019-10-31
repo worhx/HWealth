@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_gravity="center"
         android:contentDescription="@string/app_logo"
         app:srcCompat="@drawable/hwealthlogo" />
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/username"
-        android:textColor="@color/address"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp" />
 
     <EditText
@@ -29,14 +29,14 @@
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
-        android:textColor="@color/address" />
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/passwordTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/password"
-        android:textColor="@color/address"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp" />
 
     <EditText
@@ -46,14 +46,15 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:textColor="@color/address" />
+        android:textColor="@color/colorPrimaryDark" />
 
     <Button
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:background="@color/followingBg"
+        android:background="@color/colorAccent"
+        android:textColor="@color/white"
         android:text="@string/login" />
 
     <LinearLayout

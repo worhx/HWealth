@@ -10,7 +10,7 @@
         android:id="@+id/profileImg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/followersBg"
+        android:background="@color/colorAccent"
         android:paddingBottom="20dp">
 
 
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="@color/followersBg"
+            android:background="@color/colorAccent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
@@ -101,7 +101,7 @@
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="@color/followersBg"
+            android:background="@color/colorAccent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
@@ -133,7 +133,7 @@
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="@color/followersBg"
+            android:background="@color/colorAccent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
@@ -186,7 +186,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dob"
-                android:textColor="@color/headings"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="13sp" />
 
             <TextView
@@ -216,7 +216,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gender"
-                android:textColor="@color/headings"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="13sp" />
 
             <TextView
@@ -246,7 +246,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/email"
-                android:textColor="@color/headings"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="13sp" />
 
             <TextView
@@ -271,7 +271,19 @@
 
     <Button
         android:id="@+id/twoFAButton"
+        style="?android:attr/buttonBarButtonStyle"
+        android:background="@color/colorAccent"
+        android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/setup_2FA" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:text="@string/logout"
+        android:textColor="@color/white" />
 </LinearLayout>

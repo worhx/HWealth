@@ -3,7 +3,6 @@ package com.team09.hwealth;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,12 +83,11 @@ public class TwoFAFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
+//                                Log.d(TAG, jsonResponse.toString());
                                 JSONObject jsonProfile = new JSONObject(jsonResponse.getString("secret"));
                                 Bundle bundle = new Bundle();
                                 bundle.putString("twoFA", jsonProfile.toString());
                                 TwoFAQRFragment fragment2 = new TwoFAQRFragment();
-                                Log.d(TAG, "pui");
                                 fragment2.setArguments(bundle);
                                 FragmentManager fragmentManager = getFragmentManager();
                                 FragmentTransaction fragmentTransaction = Objects.requireNonNull(fragmentManager).beginTransaction();

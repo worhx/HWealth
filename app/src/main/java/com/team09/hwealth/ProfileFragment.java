@@ -50,6 +50,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        Button logoutButton = view.findViewById(R.id.logoutButton);
         Button twoFAButton = view.findViewById(R.id.twoFAButton);
         ImageButton setting = view.findViewById(R.id.setting);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
@@ -74,6 +75,15 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 Intent TwoFAActivity = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), TwoFAActivity.class);
                 startActivity(TwoFAActivity);
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent LoginActivity = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), LoginActivity.class);
+                startActivity(LoginActivity);
+                getActivity().finish();
             }
         });
         return view;

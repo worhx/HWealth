@@ -37,6 +37,7 @@
     <string name="enter_security_code">Enter Security Code</string>
     <string name="confirm_security_code">Confirm Security Code</string>
     <string name="setup_2FA">Setup 2FA</string>
+    <string name="logout">Logout</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

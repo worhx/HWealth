@@ -12,7 +12,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/steps"
-                android:textColor="@color/address"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp" />
 
             <TextView

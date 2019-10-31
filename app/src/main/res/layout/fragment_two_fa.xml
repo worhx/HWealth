@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/password"
-        android:textColor="@color/address"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp" />
 
     <EditText
@@ -22,12 +22,15 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:textColor="@color/address" />
+        android:textColor="@color/colorPrimaryDark" />
 
     <Button
         android:id="@+id/confirmPasswordButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="?android:attr/buttonBarButtonStyle"
+        android:background="@color/colorAccent"
+        android:textColor="@color/white"
         android:text="@string/confirm_password" />
 
 </LinearLayout>

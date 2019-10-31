@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="20dp"
-        android:background="@color/followersBg"
+        android:background="@color/colorAccent"
         android:layout_below="@+id/topnavbar">
         <RelativeLayout
             android:id="@+id/imgUser"
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/followersBg"
+            android:background="@color/colorAccent"
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/followersBg"
+            android:background="@color/colorAccent"
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/followersBg"
+            android:background="@color/colorAccent"
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
@@ -181,7 +181,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/dob"
-                    android:textColor="@color/headings"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="13sp" />
 
                 <EditText
@@ -211,7 +211,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/email"
-                    android:textColor="@color/headings"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="13sp" />
 
                 <EditText
