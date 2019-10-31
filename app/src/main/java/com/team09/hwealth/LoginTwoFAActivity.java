@@ -48,7 +48,6 @@ public class LoginTwoFAActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_two_fa);
         Button confirmSixDigitCodeButton = findViewById(R.id.confirmSixDigitCodeButton);
         prefs = getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
-
         confirmSixDigitCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,6 +88,7 @@ public class LoginTwoFAActivity extends AppCompatActivity {
                             prefs.edit().putString("encryptedKey", cryptor.encryptText(token)).apply();
                             prefs.edit().putString("keyIv", cryptor.getIv_string()).apply();
                             Intent StepsActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            StepsActivityIntent.putExtra("2FA", true);
                             StepsActivityIntent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(StepsActivityIntent);
                             finish();

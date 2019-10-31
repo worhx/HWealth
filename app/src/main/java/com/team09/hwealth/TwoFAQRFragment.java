@@ -1,6 +1,7 @@
 package com.team09.hwealth;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -42,6 +43,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Context.WINDOW_SERVICE;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
 
@@ -158,10 +160,12 @@ public class TwoFAQRFragment extends Fragment {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
                                 Log.d(TAG, jsonResponse.toString());
-                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
                                 TextView recoveryCodeTV = v.findViewById(R.id.recoveryCodeTV);
                                 recoveryCodeTV.setText(jsonResponse.getString("recoveryCode"));
-
+                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message") + " You will be logged out", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                                intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
                             }
 
                         } catch (JSONException e) {

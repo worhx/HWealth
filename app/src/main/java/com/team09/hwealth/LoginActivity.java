@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -29,6 +30,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.Objects;
 
 import javax.crypto.NoSuchPaddingException;
 
@@ -60,23 +62,30 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!handledClick) {
                     handledClick = true;
-                    String userString = userET.getText().toString();
-                    String passString = passET.getText().toString();
-                    if (!userString.isEmpty() || !passString.isEmpty()) {
-                        JSONObject send = new JSONObject();
-                        try {
-                            send.put("username", userString);
-                            send.put("password", passString);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    try {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                        String userString = userET.getText().toString();
+                        String passString = passET.getText().toString();
+                        if (!userString.isEmpty() || !passString.isEmpty()) {
+                            JSONObject send = new JSONObject();
+                            try {
+                                send.put("username", userString);
+                                send.put("password", passString);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d(TAG, send.toString());
+                            progressBar.setVisibility(View.VISIBLE);
+                            Submit(send);
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
+                            handledClick = false;
                         }
-                        Log.d(TAG, send.toString());
-                        progressBar.setVisibility(View.VISIBLE);
-                        Submit(send);
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
-                        handledClick = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
                 }
 
             }

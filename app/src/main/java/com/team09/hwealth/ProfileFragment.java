@@ -47,6 +47,7 @@ public class ProfileFragment extends Fragment {
     private String email;
     private RequestQueue mQueue;
     private SharedPreferences prefs;
+    private boolean handledClick = false;
 
     @Nullable
     @Override
@@ -54,6 +55,9 @@ public class ProfileFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Button logoutButton = view.findViewById(R.id.logoutButton);
         Button twoFAButton = view.findViewById(R.id.twoFAButton);
+        if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("2FA", false)) {
+            twoFAButton.setText(R.string.remove_two_FA);
+        }
         ImageButton setting = view.findViewById(R.id.setting);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         JSONObject send = new JSONObject();
@@ -75,10 +79,20 @@ public class ProfileFragment extends Fragment {
         twoFAButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent TwoFAActivity = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), TwoFAActivity.class);
-                startActivity(TwoFAActivity);
+                if (!handledClick) {
+                    handledClick = true;
+                    Intent TwoFAActivity = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), TwoFAActivity.class);
+                    if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("2FA", false)) {
+                        TwoFAActivity.putExtra("2FA", true);
+                        startActivity(TwoFAActivity);
+                    } else {
+                        TwoFAActivity.putExtra("2FA", false);
+                        startActivity(TwoFAActivity);
+                    }
+                }
             }
         });
+        handledClick = false;
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +109,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        handledClick = false;
         JSONObject send = new JSONObject();
         RetrieveAccount(send, Objects.requireNonNull(super.getView()));
         RetrieveProfile(send, super.getView());
