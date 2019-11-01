@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,23 +50,31 @@ public class StepsFragment extends Fragment {
         Button createSteps = view.findViewById(R.id.createStepsButton);
         Button retrieveSteps = view.findViewById(R.id.retrieveStepsButton);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
-
-        //step fixed at 199 for testing
-        final int step = 199;
+        final EditText currentStepsET = view.findViewById(R.id.currentStepsET);
         createSteps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!currentStepsET.getText().toString().equals("")) {
+                    if (currentStepsET.getText().toString().matches("^[0-9]{1,6}$")) {
+                        JSONObject send = new JSONObject();
+                        int steps = Integer.parseInt(currentStepsET.getText().toString());
+                        try {
+                            send.put("totalSteps", steps);
+                            send.put("dateRecorded", date);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, send.toString());
 
-                JSONObject send = new JSONObject();
-                try {
-                    send.put("totalSteps", step);
-                    send.put("dateRecorded", date);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        Submit(send, view);
+                    } else {
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Please enter number within 6 digits", Toast.LENGTH_LONG).show();
+
+                    }
+                } else {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Please enter steps", Toast.LENGTH_LONG).show();
                 }
-                Log.d(TAG, send.toString());
 
-                Submit(send, view);
             }
         });
         retrieveSteps.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +93,7 @@ public class StepsFragment extends Fragment {
     private void Submit(JSONObject data, View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
+        final EditText currentStepsET = view.findViewById(R.id.currentStepsET);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, STEP_URL,
                 new Response.Listener<String>() {
@@ -96,7 +104,7 @@ public class StepsFragment extends Fragment {
                             if (jsonResponse.getString("error").equals("false")) {
                                 Log.d(TAG, jsonResponse.toString());
                                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
-                                currentStepTV.setText(jsonResponse.getString("message"));
+                                currentStepsET.setText(jsonResponse.getString("message"));
                             }
 
                         } catch (JSONException e) {
@@ -158,7 +166,7 @@ public class StepsFragment extends Fragment {
     private void Retrieve(JSONObject data, View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
+        final EditText currentStepsET = view.findViewById(R.id.currentStepsET);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, STEP_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -170,7 +178,7 @@ public class StepsFragment extends Fragment {
                                 JSONArray recordsJSONArr = new JSONArray(jsonResponse.getString("records"));
                                 Log.d(TAG, recordsJSONArr.toString());
                                 JSONObject recordsJSONArrJSONObject = recordsJSONArr.getJSONObject(0);
-                                currentStepTV.setText(recordsJSONArrJSONObject.getString("totalSteps"));
+                                currentStepsET.setText(recordsJSONArrJSONObject.getString("totalSteps"));
                             }
 
                         } catch (JSONException e) {

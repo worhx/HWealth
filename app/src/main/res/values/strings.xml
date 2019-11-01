@@ -21,8 +21,8 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="sample_dob">26–02–1967</string>
-    <string name="sample_weight">67 KG</string>
-    <string name="sample_height">177 CM</string>
+    <string name="sample_weight">67</string>
+    <string name="sample_height">1.71</string>
     <string name="sample_bmi">21.4</string>
     <string name="nil">-</string>
     <string name="edit_profile">Edit Profile</string>

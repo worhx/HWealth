@@ -42,6 +42,7 @@ public class EditActivity extends AppCompatActivity {
     private EditText email;
     private RequestQueue mQueue;
     private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,20 +71,36 @@ public class EditActivity extends AppCompatActivity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final EditText weightET = findViewById(R.id.weightET);
-                final EditText heightET = findViewById(R.id.heightET);
-                JSONObject send = new JSONObject();
-                try {
-                    send.put("weight", weightET.getText().toString());
-                    send.put("height", heightET.getText().toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (!height.getText().toString().equals("") && !(weight.getText().toString().equals(("")))) {
+                    if (height.getText().toString().matches("^\\b[1-9]\\d{0,2}\\.\\d{0,2}\\b")) {
+                        if (weight.getText().toString().matches("\\b[1-9]\\d{0,2}\\.\\d{0,2}\\b")) {
+                            JSONObject send = new JSONObject();
+                            final EditText weightET = findViewById(R.id.weightET);
+                            final EditText heightET = findViewById(R.id.heightET);
+                            try {
+                                send.put("weight", weightET.getText().toString());
+                                send.put("height", heightET.getText().toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Submit(send);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Please enter weight in the format 60.5", Toast.LENGTH_LONG).show();
+
+                        }
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please enter height in the format 1.65", Toast.LENGTH_LONG).show();
+
+                    }
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please do not height or weight empty", Toast.LENGTH_LONG).show();
                 }
-                Submit(send);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
             }
         });
     }
