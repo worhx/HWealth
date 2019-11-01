@@ -3,8 +3,6 @@ package com.team09.hwealth;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +10,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -28,13 +30,8 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 public class MessageFragment extends Fragment {
     private static final String CONVERSATION_URL = "https://hwealth.herokuapp.com/api/conversation";
@@ -58,14 +55,14 @@ public class MessageFragment extends Fragment {
         final String saveData = data.toString();
         final ArrayList<MessageData> names = new ArrayList<>();
         final ListView messageListView = view.findViewById(R.id.message_list);
-        RequestQueue mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity().getApplicationContext()));
+        RequestQueue mQueue = Volley.newRequestQueue(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getApplicationContext()));
         StringRequest stringRequest = new StringRequest(Request.Method.GET, CONVERSATION_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try{
                             JSONObject jsonResponse = new JSONObject(response);
-                            String cid = "";
+                            String cid;
                             if (jsonResponse.getString("error").equals("false")){
                                 JSONArray jsonConvo = new JSONArray(jsonResponse.getString("allConversation"));
 
@@ -86,13 +83,13 @@ public class MessageFragment extends Fragment {
                             for(int i = 0; i < names.size(); i++){
                                 nameArray[i] = names.get(i).getName();
                             }
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.fragment_listview, nameArray);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.fragment_listview, nameArray);
                             messageListView.setAdapter(adapter);
                             messageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     MessageListFragment mlf = new MessageListFragment();
-                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,mlf).commit();
+                                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mlf).commit();
                                     mlf.sendId(names.get(i).getUid(), names.get(i).getCid());
                                 }
                             });
