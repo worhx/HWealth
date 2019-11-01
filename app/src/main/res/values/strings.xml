@@ -23,6 +23,11 @@
     <string name="sample_dob">26–02–1967</string>
     <string name="sample_weight">67</string>
     <string name="sample_height">1.71</string>
+    <string name="food_intake">Food Intake</string>
+    <string name="food_name">Food Name</string>
+    <string name="food_calories">Food Calories</string>
+    <string name="food_type">Food Type</string>
+    <string name="record_food">Record Food Intake</string>
     <string name="sample_bmi">21.4</string>
     <string name="nil">-</string>
     <string name="edit_profile">Edit Profile</string>
@@ -44,7 +49,10 @@
     <string name="confirm_six_digit_code">Confirm Six Digit Code</string>
 
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string-array name="food_type_array">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Supper</item>
+    </string-array>
 </resources>

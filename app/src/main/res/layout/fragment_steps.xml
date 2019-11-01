@@ -24,7 +24,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
@@ -40,7 +40,66 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/retrieve_steps" />
+
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/foodTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/food_intake"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/mealTypeTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/food_type"
+        android:textColor="@color/colorPrimary"
+        android:textSize="13sp" />
+
+    <Spinner
+        android:id="@+id/foodTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/foodNameTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/food_name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/foodNameET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/foodCaloriesTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/food_calories"
+        android:textColor="@color/colorPrimary"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/foodCaloriesET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/recordFoodButton"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/record_food" />
 
 </LinearLayout>
