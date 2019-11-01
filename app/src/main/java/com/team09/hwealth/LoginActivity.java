@@ -30,7 +30,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.Objects;
 
 import javax.crypto.NoSuchPaddingException;
 
@@ -44,10 +43,12 @@ public class LoginActivity extends AppCompatActivity {
     private RequestQueue mQueue;
     private ProgressBar progressBar;
     private SharedPreferences prefs;
-    private boolean handledClick = false;
+    private boolean handledClick;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        handledClick = false;
         setContentView(R.layout.activity_login);
         Button forgetPassword = findViewById(R.id.forgetPasswordButton);
         Button login = findViewById(R.id.login);
@@ -62,29 +63,28 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!handledClick) {
                     handledClick = true;
-                    try {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                        String userString = userET.getText().toString();
-                        String passString = passET.getText().toString();
-                        if (!userString.isEmpty() || !passString.isEmpty()) {
-                            JSONObject send = new JSONObject();
-                            try {
-                                send.put("username", userString);
-                                send.put("password", passString);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            Log.d(TAG, send.toString());
-                            progressBar.setVisibility(View.VISIBLE);
-                            Submit(send);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
-                            handledClick = false;
+                    String userString = userET.getText().toString();
+                    String passString = passET.getText().toString();
+                    if (!userString.isEmpty() && !passString.isEmpty()) {
+                        JSONObject send = new JSONObject();
+                        try {
+                            send.put("username", userString);
+                            send.put("password", passString);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.d(TAG, send.toString());
+                        progressBar.setVisibility(View.VISIBLE);
+                        Submit(send);
+                        handledClick = false;
+                        InputMethodManager imm = (InputMethodManager) getSystemService(LoginActivity.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Please enter username or password", Toast.LENGTH_LONG).show();
+                        handledClick = false;
                     }
+
 
                 }
 
@@ -107,11 +107,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
         progressBar.setVisibility(View.GONE);
         handledClick = false;
-
     }
 
     ////Submit
