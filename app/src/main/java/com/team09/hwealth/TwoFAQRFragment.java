@@ -43,7 +43,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Context.WINDOW_SERVICE;
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
 
@@ -66,29 +65,36 @@ public class TwoFAQRFragment extends Fragment {
                 final JSONObject twoFAJSON = new JSONObject(twoFAStr);
                 view = inflater.inflate(R.layout.fragment_two_faqr, container, false);
                 qrGenerator(twoFAJSON.getString("otpauth_url"));
-                TextView securityCodeTV = view.findViewById(R.id.securityCodeTV);
+                final TextView securityCodeTV = view.findViewById(R.id.securityCodeTV);
                 securityCodeTV.setText(twoFAJSON.getString("base32"));
                 final EditText qrET = view.findViewById(R.id.qrET);
                 Button confirmSecurityButton = view.findViewById(R.id.confirmSecurityCodeButton);
-                if (qrET.getText() != null) {
-                    confirmSecurityButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            JSONObject send = new JSONObject();
-                            try {
-                                String token = qrET.getText().toString();
-                                send.put("secret", twoFAJSON.getString("base32"));
-                                send.put("token", token);
-                                Submit(send, view);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                } else {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Enter Token", Toast.LENGTH_LONG).show();
-                }
+                confirmSecurityButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!(qrET.getText().toString().matches(""))) {
+                            if (qrET.getText().toString().matches("^[0-9]{6}$")) {
+                                JSONObject send = new JSONObject();
+                                try {
+                                    String token = qrET.getText().toString();
+                                    send.put("secret", twoFAJSON.getString("base32"));
+                                    send.put("token", token);
+                                    Submit(send, view);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Enter only numbers", Toast.LENGTH_LONG).show();
 
+                            }
+
+                        } else {
+                            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Enter Token", Toast.LENGTH_LONG).show();
+                        }
+
+
+                    }
+                });
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -164,8 +170,10 @@ public class TwoFAQRFragment extends Fragment {
                                 recoveryCodeTV.setText(jsonResponse.getString("recoveryCode"));
                                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message") + " You will be logged out", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
-                                intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
+                                getActivity().finish();
+
                             }
 
                         } catch (JSONException e) {
