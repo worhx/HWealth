@@ -59,6 +59,7 @@ public class ProfileFragment extends Fragment {
         if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("2FA", false)) {
             twoFAButton.setText(R.string.remove_two_FA);
         }
+        Button changePasswordButton = view.findViewById(R.id.changePasswordButton);
         ImageButton setting = view.findViewById(R.id.setting);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         JSONObject send = new JSONObject();
@@ -105,7 +106,16 @@ public class ProfileFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ChangePasswordActivity = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), com.team09.hwealth.ChangePasswordActivity.class);
+                startActivity(ChangePasswordActivity);
+            }
+        });
         return view;
+
     }
 
     @Override
