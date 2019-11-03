@@ -7,11 +7,13 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,11 +45,13 @@ public class MessageListFragment extends Fragment {
     private static final String MESSAGE_URL = "https://hwealth.herokuapp.com/api/message";
     private static final String CONVO_URL = "https://hwealth.herokuapp.com/api/conversation";
     private static final String SHAREDPREF = "SHAREDPREF";
-    private String uid;
-    private String cid;
+    private static final int delay = 10*1000;
+    private String uid = "";
+    private String cid = "";
     private SharedPreferences prefs;
     private RequestQueue mQueue;
-
+    private Handler handler = new Handler();
+    private Runnable runnable;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,15 +83,45 @@ public class MessageListFragment extends Fragment {
             }
         });
         JSONObject messageJSON = new JSONObject();
-        getMsg(messageJSON, topview);
+        if(!cid.isEmpty()){
+            getMsg(messageJSON, topview);
+        }
+
 
         // Inflate the layout for this fragment
         return topview;
     }
 
-    protected void sendId(String uid, String cid){
+    @Override
+    public void onResume() {
+        //start handler as activity become visible
+
+        handler.postDelayed( runnable = new Runnable() {
+            public void run() {
+                //do something
+                if(!cid.isEmpty()){
+                    JSONObject messageJSON = new JSONObject();
+                    getMsg(messageJSON, Objects.requireNonNull(getView()));
+                    handler.postDelayed(runnable, delay);
+                }
+            }
+        }, delay);
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        handler.removeCallbacks(runnable); //stop handler when activity not visible
+        super.onPause();
+    }
+
+    void sendId(String uid, String cid){
         this.uid = uid;
         this.cid = cid;
+    }
+    void sendId(String uid){
+        this.uid = uid;
     }
 
     private void submitMsg(JSONObject data, final View view){
@@ -100,6 +134,10 @@ public class MessageListFragment extends Fragment {
                     JSONObject jsonResponse = new JSONObject(response);
                     if (jsonResponse.getString("error").equals("false")){
                         JSONObject messageJSON = new JSONObject();
+                        if(cid.isEmpty()){
+                            JSONObject cidJSON = new JSONObject();
+                            getCid(cidJSON);
+                        }
                         getMsg(messageJSON, view);
                         EditText msgETxt = view.findViewById(R.id.edittext_chatbox);
                         ListView lv = view.findViewById(R.id.listview_messages);
@@ -239,6 +277,88 @@ public class MessageListFragment extends Fragment {
             }
         };
         mQueue.add(stringRequest);
+    }
+
+    private void getCid(JSONObject data){
+        final String saveData = data.toString();
+        final ArrayList<MessageData> names = new ArrayList<>();
+        RequestQueue mQueue = Volley.newRequestQueue(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getApplicationContext()));
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, CONVO_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            JSONObject jsonResponse = new JSONObject(response);
+
+                            if (jsonResponse.getString("error").equals("false")){
+                                JSONArray jsonConvo = new JSONArray(jsonResponse.getString("allConversation"));
+
+                                for(int i = 0; i < jsonConvo.length(); i++){
+                                    MessageData data = new MessageData();
+                                    JSONObject convo = jsonConvo.getJSONObject(i);
+
+                                    JSONArray members = convo.getJSONArray("members");
+                                    JSONObject name = members.getJSONObject(0);
+                                    if(name.getJSONObject("accountId").get("_id").toString().equals(uid)){
+                                        cid = convo.getString("_id");
+                                        break;
+                                    }
+                                }
+                            }
+                        } catch(JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+
+                String iv = prefs.getString("keyIv", "null");
+                String encrypted = prefs.getString("encryptedKey", "");
+                try {
+                    Cryptor cryptor = new Cryptor();
+                    cryptor.initKeyStore();
+                    String decrypted = cryptor.decryptText(encrypted, iv);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + decrypted);
+                    return headers;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            public byte[] getBody() {
+                return saveData.getBytes(StandardCharsets.UTF_8);
+            }
+
+        };
+        mQueue.add(stringRequest);
+
     }
 
 }
