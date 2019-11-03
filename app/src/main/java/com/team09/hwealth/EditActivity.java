@@ -128,6 +128,7 @@ public class EditActivity extends AppCompatActivity {
                                 }
                             }
                             SubmitBMI(bmiJSON);
+                            Toast.makeText(getApplicationContext(), "Profile Updated", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
