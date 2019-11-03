@@ -31,6 +31,7 @@
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
+        android:text="worhx"
         android:textColor="@color/colorPrimaryDark" />
 
     <TextView
@@ -48,6 +49,7 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
+        android:text="C@t12345"
         android:textColor="@color/colorPrimaryDark" />
 
     <Button

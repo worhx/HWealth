@@ -1,5 +1,6 @@
 package com.team09.hwealth;
 
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,19 +42,23 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-public class StepsFragment extends Fragment {
+public class FoodFragment extends Fragment {
     private static final String TAG = "StepsFragment";
-    private static final String STEP_URL = "https://hwealth.herokuapp.com/api/steps-record";
+    private static final String FOOD_URL = "https://hwealth.herokuapp.com/api/calories-record";
     private RequestQueue mQueue;
     private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
     private ArrayList<String> mDate = new ArrayList<>();
-    private ArrayList<String> mStep = new ArrayList<>();
+    private ArrayList<String> mCalories = new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_steps, container, false);
+        final View view = inflater.inflate(R.layout.fragment_calories, container, false);
+        final Spinner spinner = view.findViewById(R.id.foodTypeSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(this.getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.food_type_array));
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        spinner.setAdapter(adapter);
         JSONObject send = new JSONObject();
         RetrieveSteps(send,view);
         return view;
@@ -62,7 +67,7 @@ public class StepsFragment extends Fragment {
     private void RetrieveSteps(JSONObject data, final View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, STEP_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, FOOD_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -73,15 +78,18 @@ public class StepsFragment extends Fragment {
                                 JSONArray recordsJSONArr = new JSONArray(jsonResponse.getString("records"));
                                 for(int i = 0;i<recordsJSONArr.length();i++){
                                     JSONObject recordsJSONArrJSONObject = recordsJSONArr.getJSONObject(i);
-                                    String a = recordsJSONArrJSONObject.getString("totalSteps");
-                                    Log.d(TAG,a);
+                                    Log.d(TAG,recordsJSONArrJSONObject.toString());
+                                    String a = recordsJSONArrJSONObject.getString("totalCalories");
                                     String b = recordsJSONArrJSONObject.getString("dateRecorded");
-                                    mDate.add(b.substring(0,10));
-                                    Log.d(TAG,b);
-                                    Log.d(TAG,"END");
-                                    mStep.add(a);
+                                    if (mDate.contains(b.substring(0,10))) {
+                                        int value = mDate.indexOf(b.substring(0,10));
+                                        mCalories.set(value,Integer.toString(Integer.parseInt( mCalories.get(value))+Integer.parseInt(a)));
+                                    } else {
+                                        mDate.add(b.substring(0,10));
+                                        mCalories.add(a);
+                                    }
                                 }
-                                Log.d(TAG,mStep.toString());
+                                Log.d(TAG,mCalories.toString());
                                 Log.d(TAG,mDate.toString());
                                 initRecyclerView(view);
                             }
@@ -138,84 +146,79 @@ public class StepsFragment extends Fragment {
     }
     private void initRecyclerView(View view){
         RecyclerView recyclerView = view.findViewById(R.id.recylerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mStep,mDate,getActivity());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mCalories,mDate,getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
-
-//    /////////////////////////////
+}
+///////////////////////////////////////////////////////
+//private void SubmitFood(JSONObject data) {
+//    final String saveData = data.toString();
+//    mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
 //
-//    private void SubmitSteps(JSONObject data, View view) {
-//        final String saveData = data.toString();
-//        mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-//        final EditText currentStepsET = view.findViewById(R.id.currentStepsET);
-//
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, STEP_URL,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            JSONObject jsonResponse = new JSONObject(response);
-//                            if (jsonResponse.getString("error").equals("false")) {
-//                                Log.d(TAG, jsonResponse.toString());
-//                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
-//                                currentStepsET.setText(jsonResponse.getString("message"));
-//                            }
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
+//    StringRequest stringRequest = new StringRequest(Request.Method.POST, FOOD_URL,
+//            new Response.Listener<String>() {
+//                @Override
+//                public void onResponse(String response) {
+//                    try {
+//                        JSONObject jsonResponse = new JSONObject(response);
+//                        if (jsonResponse.getString("error").equals("false")) {
+//                            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
 //                        }
 //
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                NetworkResponse networkResponse = error.networkResponse;
-//                if (networkResponse != null && networkResponse.data != null) {
-//                    String strJSONError = new String(networkResponse.data);
-//                    JSONObject errorJSON;
-//                    try {
-//                        errorJSON = new JSONObject(strJSONError);
-//                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
 //                    } catch (JSONException e) {
-//                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//                        e.printStackTrace();
 //                    }
 //
 //                }
-//            }
-//        }) {
-//            @Override
-//            public String getBodyContentType() {
-//                return "application/json; charset=utf-8";
-//            }
-//
-//            @Override
-//            public Map<String, String> getHeaders() {
-//
-//                String iv = prefs.getString("keyIv", "null");
-//                String encrypted = prefs.getString("encryptedKey", "");
+//            }, new Response.ErrorListener() {
+//        @Override
+//        public void onErrorResponse(VolleyError error) {
+//            NetworkResponse networkResponse = error.networkResponse;
+//            if (networkResponse != null && networkResponse.data != null) {
+//                String strJSONError = new String(networkResponse.data);
+//                JSONObject errorJSON;
 //                try {
-//                    Cryptor cryptor = new Cryptor();
-//                    cryptor.initKeyStore();
-//                    String decrypted = cryptor.decryptText(encrypted, iv);
-//                    HashMap<String, String> headers = new HashMap<>();
-//                    headers.put("Authorization", "Bearer " + decrypted);
-//                    return headers;
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
+//                    errorJSON = new JSONObject(strJSONError);
+//                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+//                } catch (JSONException e) {
+//                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 //                }
-//                return null;
+//
 //            }
+//        }
+//    }) {
+//        @Override
+//        public String getBodyContentType() {
+//            return "application/json; charset=utf-8";
+//        }
 //
+//        @Override
+//        public Map<String, String> getHeaders() {
 //
-//            @Override
-//            public byte[] getBody() {
-//                return saveData.getBytes(StandardCharsets.UTF_8);
+//            String iv = prefs.getString("keyIv", "null");
+//            String encrypted = prefs.getString("encryptedKey", "");
+//            try {
+//                Cryptor cryptor = new Cryptor();
+//                cryptor.initKeyStore();
+//                String decrypted = cryptor.decryptText(encrypted, iv);
+//                HashMap<String, String> headers = new HashMap<>();
+//                headers.put("Authorization", "Bearer " + decrypted);
+//                return headers;
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
 //            }
+//            return null;
+//        }
 //
-//        };
-//        mQueue.add(stringRequest);
-//    }
-//    ///////////////////////////
-}
+//
+//        @Override
+//        public byte[] getBody() {
+//            return saveData.getBytes(StandardCharsets.UTF_8);
+//        }
+//
+//    };
+//    mQueue.add(stringRequest);
+//}
+///////////////////////////////////////////////////////

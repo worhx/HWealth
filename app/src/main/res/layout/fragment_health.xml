@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="6dip">
+
+    <LinearLayout
+        android:id="@+id/Steps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="6dip">
+
+        <ImageView
+            android:layout_width="51dp"
+            android:layout_height="58dp"
+            android:layout_marginRight="6dip"
+            android:layout_marginBottom="0dp"
+            android:src="@drawable/ic_directions_walk_black_24dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/StepfirstLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignWithParentIfMissing="true"
+                android:gravity="center_vertical"
+                android:text="@string/create_steps"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="26dip"
+                android:layout_below="@id/StepfirstLine"
+                android:text="Record Your Steps And See Your Progress"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/Calories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="6dip"
+        android:layout_below="@+id/Steps">
+
+        <ImageView
+            android:layout_width="51dp"
+            android:layout_height="58dp"
+            android:layout_marginRight="6dip"
+            android:layout_marginBottom="0dp"
+            android:src="@drawable/ic_local_dining_black_24dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/CaloriesfirstLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignWithParentIfMissing="true"
+                android:gravity="center_vertical"
+                android:text="@string/food_intake"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="26dip"
+                android:layout_below="@id/CaloriesfirstLine"
+                android:text="Record Your Calories Intake"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
