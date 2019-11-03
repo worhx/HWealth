@@ -6,6 +6,9 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="full_name">Full Name</string>
+    <string name="profile">Profile</string>
+    <string name="health">Health</string>
+    <string name="messages">Messages</string>
     <string name="email">Email</string>
     <string name="steps">Steps</string>
     <string name="create_steps">Create Steps</string>

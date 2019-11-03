@@ -1,13 +1,15 @@
 package com.team09.hwealth;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,14 +32,14 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_profile:
                     selectedFragment = new ProfileFragment();
                     break;
-                case R.id.nav_footstep:
+                case R.id.nav_health:
                     selectedFragment = new StepsFragment();
                     break;
                 case R.id.nav_message:
                     selectedFragment = new MessageFragment();
                     break;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, Objects.requireNonNull(selectedFragment)).commit();
             return true;
         }
     };
