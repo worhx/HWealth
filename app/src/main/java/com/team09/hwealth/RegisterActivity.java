@@ -57,14 +57,14 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please do not leave fields empty", Toast.LENGTH_LONG).show();
                 } else if ((fullNameET.getText().length() < 5) || (userET.getText().length() < 5)) {
                     Toast.makeText(getApplicationContext(), "Username or full name cannot be less than 5 characters ", Toast.LENGTH_LONG).show();
-                } else if (!fullNameET.getText().toString().matches("^[a-zA-Z0-9 ]*$")) {
+                } else if (!fullNameET.getText().toString().matches("^[a-zA-Z .,\\-']{1,100}$")) {
                     Toast.makeText(getApplicationContext(), "Full name should only contain letters", Toast.LENGTH_LONG).show();
                 } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailET.getText().toString()).matches()) {
                     Toast.makeText(getApplicationContext(), "Please enter valid email address", Toast.LENGTH_LONG).show();
                 } else if (!userET.getText().toString().matches("^[a-zA-Z0-9_]*$")) {
                     Toast.makeText(getApplicationContext(), "Username should only contain upper and lowercase letters, numbers, and underscores", Toast.LENGTH_LONG).show();
-                } else if (!passET.getText().toString().matches("^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W).*$")) {
-                    Toast.makeText(getApplicationContext(), "Password should contain 1 uppercase, 1 lowercase, 1 special char, 1 number", Toast.LENGTH_LONG).show();
+                } else if (!passET.getText().toString().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*<>])(?=\\S+$).{8,64}$")) {
+                    Toast.makeText(getApplicationContext(), "Password must contain 1 Uppercase, 1 Lowercase, 1 Number, 1 Special Character, a minimum of 8 characters in total, and no white spaces.", Toast.LENGTH_LONG).show();
                 } else if (!passET.getText().toString().matches(confirmPasswordET.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_LONG).show();
 

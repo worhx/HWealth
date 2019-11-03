@@ -69,10 +69,11 @@
 
                 <EditText
                     android:id="@+id/heightET"
-                    android:inputType="numberDecimal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
                     android:textColor="@color/white"
+                    android:inputType="numberDecimal"
                     android:textSize="25sp" />
 
                 <TextView
@@ -106,6 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
+                    android:backgroundTint="@color/white"
                     android:textColor="@color/white"
                     android:textSize="25sp" />
 
@@ -189,7 +191,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
-                    android:inputType="date"
+                    android:inputType="text"
                     android:textColor="#000000"
                     android:textSize="18sp" />
 

@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,35 +40,54 @@ import java.util.Objects;
 public class StepsFragment extends Fragment {
     private static final String TAG = "StepsFragment";
     private static final String STEP_URL = "https://hwealth.herokuapp.com/api/steps-record";
+    private static final String FOOD_URL = "https://hwealth.herokuapp.com/api/calories-record";
     private RequestQueue mQueue;
     private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
+    private String date;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_steps, container, false);
-        final String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        final Spinner spinner = view.findViewById(R.id.foodTypeSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(this.getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.food_type_array));
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spinner.setAdapter(adapter);
+        Button recordFoodButton = view.findViewById(R.id.recordFoodButton);
+
+        final EditText foodCaloriesET = view.findViewById(R.id.foodCaloriesET);
+        final EditText foodNameET = view.findViewById(R.id.foodNameET);
+
+        date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         Button createSteps = view.findViewById(R.id.createStepsButton);
         Button retrieveSteps = view.findViewById(R.id.retrieveStepsButton);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
-
-        //step fixed at 199 for testing
-        final int step = 199;
+        final EditText currentStepsET = view.findViewById(R.id.currentStepsET);
         createSteps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!currentStepsET.getText().toString().equals("")) {
+                    if (currentStepsET.getText().toString().matches("^[0-9]{1,6}$")) {
+                        JSONObject send = new JSONObject();
+                        int steps = Integer.parseInt(currentStepsET.getText().toString());
+                        try {
+                            send.put("totalSteps", steps);
+                            send.put("dateRecorded", date);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d(TAG, send.toString());
+                        currentStepsET.setText("");
+                        SubmitSteps(send, view);
+                    } else {
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Please enter number within 6 digits", Toast.LENGTH_LONG).show();
 
-                JSONObject send = new JSONObject();
-                try {
-                    send.put("totalSteps", step);
-                    send.put("dateRecorded", date);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Please enter steps", Toast.LENGTH_LONG).show();
                 }
-                Log.d(TAG, send.toString());
 
-                Submit(send, view);
             }
         });
         retrieveSteps.setOnClickListener(new View.OnClickListener() {
@@ -76,16 +97,54 @@ public class StepsFragment extends Fragment {
 //
                 Log.d(TAG, send.toString());
 
-                Retrieve(send, view);
+                RetrieveSteps(send, view);
+            }
+        });
+        recordFoodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((!foodCaloriesET.getText().toString().equals("")) && (!foodNameET.getText().toString().equals(""))) {
+                    if (foodNameET.getText().toString().matches("[A-Za-z]{3,}(\\s[A-Za-z]{3,})?\\s*")) {
+                        if (foodCaloriesET.getText().toString().matches("^[0-9]{1,4}$")) {
+                            String mealTypeText = spinner.getSelectedItem().toString();
+                            JSONObject foodJSON = new JSONObject();
+                            JSONObject caloriesJSON = new JSONObject();
+                            try {
+                                foodJSON.put("dateRecorded", date);
+                                foodJSON.put("mealType", mealTypeText);
+                                caloriesJSON.put("foodName", foodNameET.getText().toString());
+                                caloriesJSON.put("calories", foodCaloriesET.getText().toString());
+                                JSONArray foodJSONArr = new JSONArray();
+                                foodJSONArr.put(caloriesJSON);
+                                foodJSON.put("foodEaten", foodJSONArr);
+                                foodCaloriesET.setText("");
+                                foodNameET.setText("");
+                                SubmitFood(foodJSON);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Calories should not be more than 4 digits", Toast.LENGTH_LONG).show();
+                        }
+
+                    } else {
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Food name should be in format like \"chicken rice\"", Toast.LENGTH_LONG).show();
+
+                    }
+                } else {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Fields cannot be blank", Toast.LENGTH_LONG).show();
+                }
             }
         });
         return view;
     }
 
-    private void Submit(JSONObject data, View view) {
+    private void SubmitSteps(JSONObject data, View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
+        final EditText currentStepsET = view.findViewById(R.id.currentStepsET);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, STEP_URL,
                 new Response.Listener<String>() {
@@ -96,7 +155,7 @@ public class StepsFragment extends Fragment {
                             if (jsonResponse.getString("error").equals("false")) {
                                 Log.d(TAG, jsonResponse.toString());
                                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
-                                currentStepTV.setText(jsonResponse.getString("message"));
+                                currentStepsET.setText(jsonResponse.getString("message"));
                             }
 
                         } catch (JSONException e) {
@@ -155,10 +214,10 @@ public class StepsFragment extends Fragment {
         mQueue.add(stringRequest);
     }
 
-    private void Retrieve(JSONObject data, View view) {
+    private void RetrieveSteps(JSONObject data, View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        final TextView currentStepTV = view.findViewById(R.id.currentStepsTV);
+        final EditText currentStepsET = view.findViewById(R.id.currentStepsET);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, STEP_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -170,7 +229,7 @@ public class StepsFragment extends Fragment {
                                 JSONArray recordsJSONArr = new JSONArray(jsonResponse.getString("records"));
                                 Log.d(TAG, recordsJSONArr.toString());
                                 JSONObject recordsJSONArrJSONObject = recordsJSONArr.getJSONObject(0);
-                                currentStepTV.setText(recordsJSONArrJSONObject.getString("totalSteps"));
+                                currentStepsET.setText(recordsJSONArrJSONObject.getString("totalSteps"));
                             }
 
                         } catch (JSONException e) {
@@ -227,4 +286,75 @@ public class StepsFragment extends Fragment {
         };
         mQueue.add(stringRequest);
     }
+
+    private void SubmitFood(JSONObject data) {
+        final String saveData = data.toString();
+        mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, FOOD_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("error").equals("false")) {
+                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+
+                String iv = prefs.getString("keyIv", "null");
+                String encrypted = prefs.getString("encryptedKey", "");
+                try {
+                    Cryptor cryptor = new Cryptor();
+                    cryptor.initKeyStore();
+                    String decrypted = cryptor.decryptText(encrypted, iv);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + decrypted);
+                    return headers;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+
+            @Override
+            public byte[] getBody() {
+                return saveData.getBytes(StandardCharsets.UTF_8);
+            }
+
+        };
+        mQueue.add(stringRequest);
+    }
+
 }

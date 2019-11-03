@@ -2,19 +2,18 @@ package com.team09.hwealth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -34,55 +33,45 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MessageFragment extends Fragment {
-    private static final String CONVERSATION_URL = "https://hwealth.herokuapp.com/api/conversation";
+
+public class NewConvoFragment extends Fragment {
+
+    private static final String PROF_URL = "https://hwealth.herokuapp.com/api/profile/professionals";
     private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
 
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view =  inflater.inflate(R.layout.fragment_message,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_new_convo, container, false);
+        // Inflate the layout for this fragment
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         JSONObject messageJSON = new JSONObject();
-        retrieveName(messageJSON, view);
-        Button newConvoBtn = view.findViewById(R.id.new_convo_btn);
-        newConvoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NewConvoFragment ncf = new NewConvoFragment();
-                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, ncf).commit();
-            }
+        retrieveProf(messageJSON, view);
 
-        });
         return view;
+
     }
 
-    private void retrieveName(JSONObject data, View view){
+    private void retrieveProf(JSONObject data, View view){
         final String saveData = data.toString();
         final ArrayList<MessageData> names = new ArrayList<>();
-        final ListView messageListView = view.findViewById(R.id.message_list);
+        final ListView userListView = view.findViewById(R.id.user_list);
         RequestQueue mQueue = Volley.newRequestQueue(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getApplicationContext()));
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, CONVERSATION_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, PROF_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try{
                             JSONObject jsonResponse = new JSONObject(response);
-                            String cid;
                             if (jsonResponse.getString("error").equals("false")){
-                                JSONArray jsonConvo = new JSONArray(jsonResponse.getString("allConversation"));
+                                JSONArray jsonProf = new JSONArray(jsonResponse.getString("professionals"));
 
-                                for(int i = 0; i < jsonConvo.length(); i++){
+                                for(int i = 0; i < jsonProf.length(); i++){
                                     MessageData data = new MessageData();
-                                    JSONObject convo = jsonConvo.getJSONObject(i);
-                                    cid = convo.getString("_id");
-                                    JSONArray members = convo.getJSONArray("members");
-                                    JSONObject name = members.getJSONObject(0);
-                                    data.setName(name.getJSONObject("accountId").get("username").toString());
-                                    data.setUid(name.getJSONObject("accountId").get("_id").toString());
-                                    data.setCid(cid);
+                                    JSONObject convo = jsonProf.getJSONObject(i);
+                                    data.setName(convo.getJSONObject("accountId").get("username").toString());
+                                    data.setUid(convo.getJSONObject("accountId").get("_id").toString());
                                     names.add(data);
                                 }
                             }
@@ -92,13 +81,13 @@ public class MessageFragment extends Fragment {
                                 nameArray[i] = names.get(i).getName();
                             }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.fragment_listview, nameArray);
-                            messageListView.setAdapter(adapter);
-                            messageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            userListView.setAdapter(adapter);
+                            userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     MessageListFragment mlf = new MessageListFragment();
                                     Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mlf).commit();
-                                    mlf.sendId(names.get(i).getUid(), names.get(i).getCid());
+                                    mlf.sendId(names.get(i).getUid());
                                 }
                             });
                         } catch(JSONException e){

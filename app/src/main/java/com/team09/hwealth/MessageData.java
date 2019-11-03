@@ -5,11 +5,19 @@ public class MessageData {
     private String name;
     private String message;
     private String time;
+    private String uid;
+    private String cid;
 
-    public MessageData(String name, String message, String time) {
+    public MessageData() {
+
+    }
+
+    public MessageData(String name, String message, String time, String uid, String cid){
         this.name = name;
         this.message = message;
         this.time = time;
+        this.uid = uid;
+        this.cid = cid;
     }
 
     public String getName() {
@@ -34,5 +42,21 @@ public class MessageData {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getCid() {
+        return cid;
+    }
+
+    public void setCid(String cid) {
+        this.cid = cid;
     }
 }

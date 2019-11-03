@@ -43,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private String height;
     private String weight;
     private String bmi;
+    private String dob;
     private String name;
     private String email;
     private RequestQueue mQueue;
@@ -58,6 +59,7 @@ public class ProfileFragment extends Fragment {
         if (Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra("2FA", false)) {
             twoFAButton.setText(R.string.remove_two_FA);
         }
+        Button changePasswordButton = view.findViewById(R.id.changePasswordButton);
         ImageButton setting = view.findViewById(R.id.setting);
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         JSONObject send = new JSONObject();
@@ -72,6 +74,7 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra("bmi", bmi);
                 intent.putExtra("name", name);
                 intent.putExtra("email", email);
+                intent.putExtra("dob", dob);
                 startActivity(intent);
 
             }
@@ -103,7 +106,16 @@ public class ProfileFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ChangePasswordActivity = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), com.team09.hwealth.ChangePasswordActivity.class);
+                startActivity(ChangePasswordActivity);
+            }
+        });
         return view;
+
     }
 
     @Override
@@ -133,6 +145,7 @@ public class ProfileFragment extends Fragment {
         final TextView weightTextView = view.findViewById(R.id.weightTV);
         final TextView bmiTextView = view.findViewById(R.id.bmiTV);
         final TextView nameTextView = view.findViewById(R.id.fullNameTV);
+        final TextView dobTextView = view.findViewById(R.id.dobTV);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, PROFILE_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -152,6 +165,10 @@ public class ProfileFragment extends Fragment {
                                     weightTextView.setText(weight);
                                     heightTextView.setText(height);
                                     bmiTextView.setText(bmi);
+                                    if (jsonProfile.has("dateOfBirth")) {
+                                        dob = jsonProfile.getString("dateOfBirth").substring(0, 10);
+                                        dobTextView.setText(dob);
+                                    }
                                 }
                             }
 

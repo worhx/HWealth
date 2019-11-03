@@ -6,42 +6,100 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-            <TextView
-                android:id="@+id/stepsTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/steps"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+    <TextView
+        android:id="@+id/stepsTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/steps"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/currentStepsTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/null_steps"
-                android:textSize="20sp" />
+    <EditText
+        android:id="@+id/currentStepsET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-                <Button
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:id="@+id/createStepsButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/create_steps" />
+        <Button
+            android:id="@+id/createStepsButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_steps" />
 
-                <Button
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:id="@+id/retrieveStepsButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/retrieve_steps" />
-            </LinearLayout>
+        <Button
+            android:id="@+id/retrieveStepsButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/retrieve_steps" />
 
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/foodTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/food_intake"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/mealTypeTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/food_type"
+        android:textColor="@color/colorPrimary"
+        android:textSize="13sp" />
+
+    <Spinner
+        android:id="@+id/foodTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/foodNameTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/food_name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/foodNameET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/foodCaloriesTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/food_calories"
+        android:textColor="@color/colorPrimary"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/foodCaloriesET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/recordFoodButton"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/record_food" />
 
 </LinearLayout>
