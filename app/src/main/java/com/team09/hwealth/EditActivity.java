@@ -34,6 +34,7 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 public class EditActivity extends AppCompatActivity {
     private static final String TAG = "EditActivity";
     private static final String UPDATE_BMI_URL = "https://hwealth.herokuapp.com/api/profile/update-bmi";
+    private static final String UPDATE_EMAIL_URL = "https://hwealth.herokuapp.com/api/account/update-email";
     private static final String SHAREDPREF = "SHAREDPREF";
     private EditText bmi;
     private EditText height;
@@ -74,20 +75,26 @@ public class EditActivity extends AppCompatActivity {
                 if (!height.getText().toString().equals("") && !(weight.getText().toString().equals(("")))) {
                     if (height.getText().toString().matches("^\\b[1-9]\\d{0,2}\\.\\d{0,2}\\b")) {
                         if (weight.getText().toString().matches("\\b[1-9]\\d{0,2}\\.\\d{0,2}\\b")) {
-                            JSONObject send = new JSONObject();
-                            final EditText weightET = findViewById(R.id.weightET);
-                            final EditText heightET = findViewById(R.id.heightET);
-                            try {
-                                send.put("weight", weightET.getText().toString());
-                                send.put("height", heightET.getText().toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            if (android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
+                                JSONObject bmiJSON = new JSONObject();
+                                JSONObject emailJSON = new JSONObject();
+                                final EditText weightET = findViewById(R.id.weightET);
+                                final EditText heightET = findViewById(R.id.heightET);
+                                final EditText emailET = findViewById(R.id.emailET);
+                                try {
+                                    bmiJSON.put("weight", weightET.getText().toString());
+                                    bmiJSON.put("height", heightET.getText().toString());
+                                    emailJSON.put("email", emailET.getText().toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                SubmitBMI(bmiJSON);
+                                SubmitEmail(emailJSON);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
                             }
-                            Submit(send);
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "Please enter weight in the format 60.5", Toast.LENGTH_LONG).show();
 
@@ -105,7 +112,7 @@ public class EditActivity extends AppCompatActivity {
         });
     }
 
-    private void Submit(JSONObject data) {
+    private void SubmitBMI(JSONObject data) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getApplicationContext()));
 
@@ -119,6 +126,77 @@ public class EditActivity extends AppCompatActivity {
                                 Log.d(TAG, jsonResponse.toString());
                                 JSONObject jsonProfile = new JSONObject(jsonResponse.getString("profile"));
                                 Log.d(TAG, jsonProfile.toString());
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+                        Toast.makeText(getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+
+                String iv = prefs.getString("keyIv", "null");
+                String encrypted = prefs.getString("encryptedKey", "");
+                try {
+                    Cryptor cryptor = new Cryptor();
+                    cryptor.initKeyStore();
+                    String decrypted = cryptor.decryptText(encrypted, iv);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + decrypted);
+                    return headers;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+
+            @Override
+            public byte[] getBody() {
+                return saveData.getBytes(StandardCharsets.UTF_8);
+            }
+
+        };
+        mQueue.add(stringRequest);
+    }
+
+    private void SubmitEmail(JSONObject data) {
+        final String saveData = data.toString();
+        mQueue = Volley.newRequestQueue(Objects.requireNonNull(getApplicationContext()));
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, UPDATE_EMAIL_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("error").equals("false")) {
+                                Log.d(TAG, jsonResponse.getString("message"));
+
                             }
 
                         } catch (JSONException e) {
