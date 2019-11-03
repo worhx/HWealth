@@ -41,6 +41,7 @@ public class EditActivity extends AppCompatActivity {
     private EditText weight;
     private TextView name;
     private EditText email;
+    private String intentEmailStr;
     private RequestQueue mQueue;
     private SharedPreferences prefs;
 
@@ -61,6 +62,7 @@ public class EditActivity extends AppCompatActivity {
         bmi.setText(getIntent().getStringExtra("bmi"));
         name.setText(getIntent().getStringExtra("name"));
         email.setText(getIntent().getStringExtra("email"));
+        intentEmailStr = getIntent().getStringExtra("email");
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,26 +77,29 @@ public class EditActivity extends AppCompatActivity {
                 if (!height.getText().toString().equals("") && !(weight.getText().toString().equals(("")))) {
                     if (height.getText().toString().matches("^\\b[1-9]\\d{0,2}\\.\\d{0,2}\\b")) {
                         if (weight.getText().toString().matches("\\b[1-9]\\d{0,2}\\.\\d{0,2}\\b")) {
-                            if (android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
-                                JSONObject bmiJSON = new JSONObject();
-                                JSONObject emailJSON = new JSONObject();
-                                final EditText weightET = findViewById(R.id.weightET);
-                                final EditText heightET = findViewById(R.id.heightET);
-                                final EditText emailET = findViewById(R.id.emailET);
-                                try {
-                                    bmiJSON.put("weight", weightET.getText().toString());
-                                    bmiJSON.put("height", heightET.getText().toString());
-                                    emailJSON.put("email", emailET.getText().toString());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                SubmitBMI(bmiJSON);
-                                SubmitEmail(emailJSON);
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                finish();
+                            JSONObject bmiJSON = new JSONObject();
+                            JSONObject emailJSON = new JSONObject();
+                            final EditText weightET = findViewById(R.id.weightET);
+                            final EditText heightET = findViewById(R.id.heightET);
+                            final EditText emailET = findViewById(R.id.emailET);
+                            try {
+                                bmiJSON.put("weight", weightET.getText().toString());
+                                bmiJSON.put("height", heightET.getText().toString());
+                                emailJSON.put("email", emailET.getText().toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+                            if (!emailET.getText().toString().equals(intentEmailStr)) {
+                                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
+                                    SubmitEmail(emailJSON);
+                                }
+                            }
+                            SubmitBMI(bmiJSON);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+
                         } else {
                             Toast.makeText(getApplicationContext(), "Please enter weight in the format 60.5", Toast.LENGTH_LONG).show();
 
