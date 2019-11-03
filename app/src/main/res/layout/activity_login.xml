@@ -8,6 +8,7 @@
 
     <ImageView
         android:id="@+id/imageView"
+        android:paddingTop="20dp"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
@@ -15,6 +16,7 @@
         app:srcCompat="@drawable/hwealthlogo" />
 
     <TextView
+        android:paddingTop="20dp"
         android:id="@+id/userTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

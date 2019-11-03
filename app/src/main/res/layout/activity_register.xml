@@ -8,7 +8,8 @@
     tools:context=".RegisterActivity">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageView"
+        android:paddingTop="20dp"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
@@ -17,6 +18,7 @@
 
     <TextView
         android:id="@+id/fullNameTV"
+        android:paddingTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/full_name"
@@ -102,6 +104,7 @@
 
     <Button
         android:id="@+id/registerButton"
+        android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
