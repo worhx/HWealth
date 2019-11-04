@@ -50,6 +50,7 @@ public class FoodFragment extends Fragment {
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mCalories = new ArrayList<>();
     private String date;
+    private RecyclerViewAdapter adapter;
 
     @Nullable
     @Override
@@ -85,7 +86,7 @@ public class FoodFragment extends Fragment {
                                 foodJSON.put("foodEaten", foodJSONArr);
                                 foodCaloriesET.setText("");
                                 foodNameET.setText("");
-                                SubmitFood(foodJSON);
+                                SubmitFood(foodJSON,view);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -189,12 +190,12 @@ public class FoodFragment extends Fragment {
     }
     private void initRecyclerView(View view){
         RecyclerView recyclerView = view.findViewById(R.id.recylerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mCalories,mDate,getActivity());
+        adapter = new RecyclerViewAdapter(mCalories,mDate,getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void SubmitFood(JSONObject data) {
+    private void SubmitFood(JSONObject data,final View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
 
@@ -205,7 +206,12 @@ public class FoodFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
+                                mCalories.clear();
+                                mDate.clear();
                                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
+                                JSONObject send = new JSONObject();
+                                RetrieveSteps(send,view);
+                                adapter.notifyDataSetChanged();
                             }
 
                         } catch (JSONException e) {
