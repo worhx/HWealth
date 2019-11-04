@@ -5,13 +5,16 @@
     android:padding="6dip">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:id="@+id/foodTV"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/food_intake" />
-
+        android:layout_gravity="center"
+        android:text="@string/food_intake"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
     <TextView
         android:id="@+id/textView2"
+        android:textColor="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/food_type" />
@@ -23,35 +26,40 @@
 
     <TextView
         android:id="@+id/textView3"
+        android:textColor="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/food_name" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/foodNameET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName" />
-
+        android:inputType="text" />
     <TextView
         android:id="@+id/textView4"
+        android:textColor="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/food_calories" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/foodCaloriesET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="number" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/recordFoodButton"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/record_food" />
+        android:background="@color/colorAccent"
+        android:text="@string/record_food"
+        android:textColor="@color/white" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

@@ -5,10 +5,13 @@
     android:padding="6dip">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:id="@+id/stepsTV"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/steps" />
+        android:layout_gravity="center"
+        android:text="@string/steps"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp" />
 
     <EditText
         android:id="@+id/stepsET"

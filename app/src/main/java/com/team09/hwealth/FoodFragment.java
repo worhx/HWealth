@@ -33,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +49,8 @@ public class FoodFragment extends Fragment {
     private SharedPreferences prefs;
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mCalories = new ArrayList<>();
+    private String date;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,10 +58,52 @@ public class FoodFragment extends Fragment {
         final Spinner spinner = view.findViewById(R.id.foodTypeSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(this.getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.food_type_array));
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
         spinner.setAdapter(adapter);
         JSONObject send = new JSONObject();
         RetrieveSteps(send,view);
+        final EditText foodCaloriesET = view.findViewById(R.id.foodCaloriesET);
+        final EditText foodNameET = view.findViewById(R.id.foodNameET);
+        Button recordFoodButton = view.findViewById(R.id.recordFoodButton);
+        recordFoodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((!foodCaloriesET.getText().toString().equals("")) && (!foodNameET.getText().toString().equals(""))) {
+                    if (foodNameET.getText().toString().matches("[A-Za-z]{3,}(\\s[A-Za-z]{3,})?\\s*")) {
+                        if (foodCaloriesET.getText().toString().matches("^[0-9]{1,4}$")) {
+                            String mealTypeText = spinner.getSelectedItem().toString();
+                            JSONObject foodJSON = new JSONObject();
+                            JSONObject caloriesJSON = new JSONObject();
+                            try {
+                                foodJSON.put("dateRecorded", date);
+                                foodJSON.put("mealType", mealTypeText);
+                                caloriesJSON.put("foodName", foodNameET.getText().toString());
+                                caloriesJSON.put("calories", foodCaloriesET.getText().toString());
+                                JSONArray foodJSONArr = new JSONArray();
+                                foodJSONArr.put(caloriesJSON);
+                                foodJSON.put("foodEaten", foodJSONArr);
+                                foodCaloriesET.setText("");
+                                foodNameET.setText("");
+                                SubmitFood(foodJSON);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Calories should not be more than 4 digits", Toast.LENGTH_LONG).show();
+                        }
+
+                    } else {
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Food name should be in format like \"chicken rice\"", Toast.LENGTH_LONG).show();
+
+                    }
+                } else {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Fields cannot be blank", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         return view;
     }
 
@@ -150,75 +193,76 @@ public class FoodFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
+
+    private void SubmitFood(JSONObject data) {
+        final String saveData = data.toString();
+        mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, FOOD_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("error").equals("false")) {
+                                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+
+                String iv = prefs.getString("keyIv", "null");
+                String encrypted = prefs.getString("encryptedKey", "");
+                try {
+                    Cryptor cryptor = new Cryptor();
+                    cryptor.initKeyStore();
+                    String decrypted = cryptor.decryptText(encrypted, iv);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + decrypted);
+                    return headers;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+
+            @Override
+            public byte[] getBody() {
+                return saveData.getBytes(StandardCharsets.UTF_8);
+            }
+
+        };
+        mQueue.add(stringRequest);
+    }
+
 }
-///////////////////////////////////////////////////////
-//private void SubmitFood(JSONObject data) {
-//    final String saveData = data.toString();
-//    mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-//
-//    StringRequest stringRequest = new StringRequest(Request.Method.POST, FOOD_URL,
-//            new Response.Listener<String>() {
-//                @Override
-//                public void onResponse(String response) {
-//                    try {
-//                        JSONObject jsonResponse = new JSONObject(response);
-//                        if (jsonResponse.getString("error").equals("false")) {
-//                            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
-//                        }
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//            }, new Response.ErrorListener() {
-//        @Override
-//        public void onErrorResponse(VolleyError error) {
-//            NetworkResponse networkResponse = error.networkResponse;
-//            if (networkResponse != null && networkResponse.data != null) {
-//                String strJSONError = new String(networkResponse.data);
-//                JSONObject errorJSON;
-//                try {
-//                    errorJSON = new JSONObject(strJSONError);
-//                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
-//                } catch (JSONException e) {
-//                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//                }
-//
-//            }
-//        }
-//    }) {
-//        @Override
-//        public String getBodyContentType() {
-//            return "application/json; charset=utf-8";
-//        }
-//
-//        @Override
-//        public Map<String, String> getHeaders() {
-//
-//            String iv = prefs.getString("keyIv", "null");
-//            String encrypted = prefs.getString("encryptedKey", "");
-//            try {
-//                Cryptor cryptor = new Cryptor();
-//                cryptor.initKeyStore();
-//                String decrypted = cryptor.decryptText(encrypted, iv);
-//                HashMap<String, String> headers = new HashMap<>();
-//                headers.put("Authorization", "Bearer " + decrypted);
-//                return headers;
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//
-//        @Override
-//        public byte[] getBody() {
-//            return saveData.getBytes(StandardCharsets.UTF_8);
-//        }
-//
-//    };
-//    mQueue.add(stringRequest);
-//}
-///////////////////////////////////////////////////////
+
