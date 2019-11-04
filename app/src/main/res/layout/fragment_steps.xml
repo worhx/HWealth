@@ -11,17 +11,21 @@
         android:text="@string/steps" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/stepsET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="number" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/createStepsButton"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_steps" />
+        android:background="@color/colorAccent"
+        android:text="@string/create_steps"
+        android:textColor="@color/white" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
