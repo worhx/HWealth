@@ -47,6 +47,7 @@ public class StepsFragment extends Fragment {
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mStep = new ArrayList<>();
     private String date;
+    private RecyclerViewAdapter adapter;
 
     @Nullable
     @Override
@@ -74,7 +75,7 @@ public class StepsFragment extends Fragment {
                         }
                         Log.d(TAG, send.toString());
                         stepsET.setText("");
-                        SubmitSteps(send);
+                        SubmitSteps(send,view);
                     } else {
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Please enter number within 6 digits", Toast.LENGTH_LONG).show();
 
@@ -168,12 +169,12 @@ public class StepsFragment extends Fragment {
 
     private void initRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recylerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mStep, mDate, getActivity());
+        adapter = new RecyclerViewAdapter(mStep, mDate, getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private void SubmitSteps(JSONObject data) {
+    private void SubmitSteps(JSONObject data, final View view) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, STEP_URL,
@@ -183,9 +184,13 @@ public class StepsFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
+                                mStep.clear();
+                                mDate.clear();
                                 Log.d(TAG, jsonResponse.toString());
                                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
-
+                                JSONObject send = new JSONObject();
+                                RetrieveSteps(send,view);
+                                adapter.notifyDataSetChanged();
                             }
 
                         } catch (JSONException e) {
@@ -226,6 +231,7 @@ public class StepsFragment extends Fragment {
                     String decrypted = cryptor.decryptText(encrypted, iv);
                     HashMap<String, String> headers = new HashMap<>();
                     headers.put("Authorization", "Bearer " + decrypted);
+                    Log.d(TAG,"Header"+headers.toString());
                     return headers;
 
                 } catch (Exception e) {
