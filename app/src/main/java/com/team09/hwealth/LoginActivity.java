@@ -34,6 +34,7 @@ import java.security.NoSuchProviderException;
 import javax.crypto.NoSuchPaddingException;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -164,6 +165,12 @@ public class LoginActivity extends AppCompatActivity {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(LoginActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                         handledClick = false;
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            finish();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

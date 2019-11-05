@@ -1,24 +1,20 @@
 package com.team09.hwealth;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -35,9 +31,10 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
 public class MessageListFragment extends Fragment {
@@ -160,6 +157,12 @@ public class MessageListFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            getActivity().finish();
+                        }
                     } catch (JSONException e) {
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }

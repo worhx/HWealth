@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 
 public class TwoFAFragment extends Fragment {
@@ -41,7 +42,6 @@ public class TwoFAFragment extends Fragment {
     private static final String DIASBLETWOFA_URL = "https://hwealth.herokuapp.com/api/two-factor/disable";
     private static final String SHAREDPREF = "SHAREDPREF";
     View view;
-    private Button confirmButton;
     private RequestQueue mQueue;
     private SharedPreferences prefs;
 
@@ -53,7 +53,7 @@ public class TwoFAFragment extends Fragment {
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
 
         final EditText passwordET = view.findViewById(R.id.passwordET);
-        confirmButton = view.findViewById(R.id.confirmPasswordButton);
+        Button confirmButton = view.findViewById(R.id.confirmPasswordButton);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,6 +121,12 @@ public class TwoFAFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            getActivity().finish();
+                        }
                     } catch (JSONException e) {
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -193,6 +199,12 @@ public class TwoFAFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            getActivity().finish();
+                        }
                     } catch (JSONException e) {
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }

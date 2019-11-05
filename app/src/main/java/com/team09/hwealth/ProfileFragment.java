@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
@@ -187,6 +188,12 @@ public class ProfileFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            getActivity().finish();
+                        }
                     } catch (JSONException e) {
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -260,6 +267,12 @@ public class ProfileFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            getActivity().finish();
+                        }
                     } catch (JSONException e) {
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }

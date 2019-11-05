@@ -1,6 +1,7 @@
 package com.team09.hwealth;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class MessageFragment extends Fragment {
     private static final String CONVERSATION_URL = "https://hwealth.herokuapp.com/api/conversation";
@@ -116,6 +119,12 @@ public class MessageFragment extends Fragment {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            getActivity().finish();
+                        }
                     } catch (JSONException e) {
                         Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
