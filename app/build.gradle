@@ -36,4 +36,5 @@ dependencies {
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.android.support:recyclerview-v7:28.0.2'
+    implementation 'com.scottyab:rootbeer-lib:0.0.7'
 }
