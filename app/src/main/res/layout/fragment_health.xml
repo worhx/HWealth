@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignWithParentIfMissing="true"
                 android:gravity="center_vertical"
-                android:text="@string/create_steps"
+                android:text="@string/steps"
                 android:textSize="16sp" />
 
             <TextView
