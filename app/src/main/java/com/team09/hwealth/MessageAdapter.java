@@ -34,7 +34,7 @@ public class MessageAdapter extends ArrayAdapter<MessageData> {
         messageData = messageDataList.get(position);
         name.setText(messageData.getName());
         message.setText(messageData.getMessage());
-        time.setText(messageData.getTime());
+        time.setText((messageData.getTime().toString()).substring(0,10));
 
         return rowView;
     }

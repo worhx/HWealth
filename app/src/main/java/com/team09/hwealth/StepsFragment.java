@@ -107,12 +107,14 @@ public class StepsFragment extends Fragment {
                                 for (int i = 0; i < recordsJSONArr.length(); i++) {
                                     JSONObject recordsJSONArrJSONObject = recordsJSONArr.getJSONObject(i);
                                     String a = recordsJSONArrJSONObject.getString("totalSteps");
-                                    Log.d(TAG, a);
                                     String b = recordsJSONArrJSONObject.getString("dateRecorded");
-                                    mDate.add(b.substring(0, 10));
-                                    Log.d(TAG, b);
-                                    Log.d(TAG, "END");
-                                    mStep.add(a);
+                                    if (mDate.contains(b.substring(0,10))) {
+                                        int value = mDate.indexOf(b.substring(0,10));
+                                        mStep.set(value,Integer.toString(Integer.parseInt( mStep.get(value))+Integer.parseInt(a)));
+                                    } else {
+                                        mDate.add(b.substring(0,10));
+                                        mStep.add(a);
+                                    }
                                 }
                                 Log.d(TAG, mStep.toString());
                                 Log.d(TAG, mDate.toString());
