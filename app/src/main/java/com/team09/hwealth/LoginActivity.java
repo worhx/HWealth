@@ -41,13 +41,13 @@ import java.security.NoSuchProviderException;
 import javax.crypto.NoSuchPaddingException;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static com.team09.hwealth.utils.Constants.CAPTCHA_URL;
+import static com.team09.hwealth.utils.Constants.LOGIN_URL;
+import static com.team09.hwealth.utils.Constants.SITE_KEY;
 
 
 public class LoginActivity extends AppCompatActivity {
-    final String SITE_KEY = "6LeFk74UAAAAAL4n7fRYBIMw8Ri_G52acK3RfpVK";
-    private static final String CAPTCHA_URL = "https://hwealth.herokuapp.com/api/captcha";
     private static final String TAG = "LoginActivity";
-    private static final String LOGIN_URL = "https://hwealth.herokuapp.com/api/auth/login";
     private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
     private ProgressBar progressBar;
