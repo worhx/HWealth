@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -23,7 +22,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,7 +45,6 @@ import static com.team09.hwealth.utils.Constants.SITE_KEY;
 
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "LoginActivity";
     private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
     private ProgressBar progressBar;
@@ -82,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Log.d(TAG, send.toString());
                         progressBar.setVisibility(View.VISIBLE);
                         validateCaptcha(send);
                         //Submit(send);
@@ -147,13 +143,10 @@ public class LoginActivity extends AppCompatActivity {
                             // An error occurred when communicating with the
                             // reCAPTCHA service. Refer to the status code to
                             // handle the error appropriately.
-                            ApiException apiException = (ApiException) e;
-                            int statusCode = apiException.getStatusCode();
-                            Log.d(TAG, "Error: " + CommonStatusCodes
-                                    .getStatusCodeString(statusCode));
+                            e.printStackTrace();
                         } else {
                             // A different, unknown type of error occurred.
-                            Log.d(TAG, "Error: " + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -176,7 +169,6 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("success").equals("true")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 Submit(submit);
                             }
 
@@ -231,7 +223,6 @@ public class LoginActivity extends AppCompatActivity {
                     if ((jsonResponse.getString("error").equals("false") && jsonResponse.getString("twoFactorEnabled").equals("false"))) {
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
-                        Log.d(TAG, jsonResponse.getString("token"));
                         String token = jsonResponse.getString("token");
                         Cryptor cryptor = new Cryptor();
                         try {

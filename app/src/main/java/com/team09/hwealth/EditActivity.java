@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -36,7 +35,6 @@ import static com.team09.hwealth.utils.Constants.UPDATE_DOB_URL;
 import static com.team09.hwealth.utils.Constants.UPDATE_EMAIL_URL;
 
 public class EditActivity extends AppCompatActivity {
-    private static final String TAG = "EditActivity";
     private static final String SHAREDPREF = "SHAREDPREF";
     private EditText bmi;
     private EditText height;
@@ -160,17 +158,6 @@ public class EditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
-                                JSONObject jsonProfile = new JSONObject(jsonResponse.getString("profile"));
-                                Log.d(TAG, jsonProfile.toString());
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
                     }
                 }, new Response.ErrorListener() {
@@ -232,16 +219,6 @@ public class EditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.getString("message"));
-
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
                     }
                 }, new Response.ErrorListener() {
@@ -303,17 +280,6 @@ public class EditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.getString("message"));
-
-                            }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
                     }
                 }, new Response.ErrorListener() {

@@ -23,6 +23,9 @@ public class Constants {
     public static final String CONVERSATION_URL = BASE_END_POINT + "/conversation";
 
     public static final String SITE_KEY = "6LeFk74UAAAAAL4n7fRYBIMw8Ri_G52acK3RfpVK";
+    public static final String TRANSFORMATION = "AES/GCM/NoPadding";
+    public static final String ANDROID_KEY_STORE = "AndroidKeyStore";
+
 
 
 

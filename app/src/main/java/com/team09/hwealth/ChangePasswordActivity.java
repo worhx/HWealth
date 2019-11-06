@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,7 +31,6 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.CHANGE_PASSWORD_URL;
 
 public class ChangePasswordActivity extends AppCompatActivity {
-    private static final String TAG = "ChangePasswordActivity";
     private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
     private SharedPreferences prefs;
@@ -91,7 +89,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 Toast.makeText(getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);

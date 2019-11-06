@@ -2,7 +2,6 @@ package com.team09.hwealth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +18,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,7 +33,6 @@ import static com.team09.hwealth.utils.Constants.REGISTER_URL;
 import static com.team09.hwealth.utils.Constants.SITE_KEY;
 
 public class RegisterActivity extends AppCompatActivity {
-    private static final String TAG = "RegisterActivity";
     private RequestQueue mQueue;
 
     @Override
@@ -85,7 +82,6 @@ public class RegisterActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    Log.d(TAG, send.toString());
                     validateCaptcha(send);
                 }
             }
@@ -117,13 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                             // An error occurred when communicating with the
                             // reCAPTCHA service. Refer to the status code to
                             // handle the error appropriately.
-                            ApiException apiException = (ApiException) e;
-                            int statusCode = apiException.getStatusCode();
-                            Log.d(TAG, "Error: " + CommonStatusCodes
-                                    .getStatusCodeString(statusCode));
-                        } else {
-                            // A different, unknown type of error occurred.
-                            Log.d(TAG, "Error: " + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -146,7 +136,6 @@ public class RegisterActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("success").equals("true")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 Submit(submit);
                             }
 
@@ -199,7 +188,6 @@ public class RegisterActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 Toast.makeText(RegisterActivity.this, jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(LoginActivityIntent);

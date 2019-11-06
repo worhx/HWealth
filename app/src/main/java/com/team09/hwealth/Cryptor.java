@@ -25,9 +25,11 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 
+import static com.team09.hwealth.utils.Constants.ANDROID_KEY_STORE;
+import static com.team09.hwealth.utils.Constants.TRANSFORMATION;
+
 class Cryptor {
-    private static final String TRANSFORMATION = "AES/GCM/NoPadding";
-    private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
+
 
     private byte[] iv;
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,6 @@ import static com.team09.hwealth.utils.Constants.ENABLE_TWO_FA_URL;
 
 
 public class TwoFAFragment extends Fragment {
-    private static final String TAG = "TwoFAFragment";
     private static final String SHAREDPREF = "SHAREDPREF";
     View view;
     private RequestQueue mQueue;
@@ -93,7 +91,6 @@ public class TwoFAFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-//                                Log.d(TAG, jsonResponse.toString());
                                 JSONObject jsonProfile = new JSONObject(jsonResponse.getString("secret"));
                                 Bundle bundle = new Bundle();
                                 bundle.putString("twoFA", jsonProfile.toString());
@@ -177,7 +174,6 @@ public class TwoFAFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message") + " You will be logged out", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
                                 intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);

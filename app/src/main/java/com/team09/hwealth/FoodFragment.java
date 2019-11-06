@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,6 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.FOOD_URL;
 
 public class FoodFragment extends Fragment {
-    private static final String TAG = "StepsFragment";
     private RequestQueue mQueue;
     private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
@@ -121,11 +119,9 @@ public class FoodFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 JSONArray recordsJSONArr = new JSONArray(jsonResponse.getString("records"));
                                 for(int i = 0;i<recordsJSONArr.length();i++){
                                     JSONObject recordsJSONArrJSONObject = recordsJSONArr.getJSONObject(i);
-                                    Log.d(TAG,recordsJSONArrJSONObject.toString());
                                     String a = recordsJSONArrJSONObject.getString("totalCalories");
                                     String b = recordsJSONArrJSONObject.getString("dateRecorded");
                                     if (mDate.contains(b.substring(0,10))) {
@@ -136,8 +132,7 @@ public class FoodFragment extends Fragment {
                                         mCalories.add(a);
                                     }
                                 }
-                                Log.d(TAG,mCalories.toString());
-                                Log.d(TAG,mDate.toString());
+
                                 initRecyclerView(view);
                             }
 
