@@ -29,11 +29,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.CHANGE_PASSWORD_URL;
 
 public class ChangePasswordActivity extends AppCompatActivity {
     private static final String TAG = "ChangePasswordActivity";
     private static final String SHAREDPREF = "SHAREDPREF";
-    private static final String CHANGE_PASSWORD_URL = "https://hwealth.herokuapp.com/api/account/update-password";
     private RequestQueue mQueue;
     private SharedPreferences prefs;
 

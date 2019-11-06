@@ -31,11 +31,11 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.CAPTCHA_URL;
+import static com.team09.hwealth.utils.Constants.REGISTER_URL;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
-    private static final String REGISTER_URL = "https://hwealth.herokuapp.com/api/account/register";
-    private static final String CAPTCHA_URL = "https://hwealth.herokuapp.com/api/captcha";
     private RequestQueue mQueue;
     final String SITE_KEY = "6LeFk74UAAAAAL4n7fRYBIMw8Ri_G52acK3RfpVK";
 

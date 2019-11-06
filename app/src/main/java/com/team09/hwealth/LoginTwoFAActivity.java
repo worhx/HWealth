@@ -35,9 +35,9 @@ import javax.crypto.NoSuchPaddingException;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.VERIFY_TWO_FA;
 
 public class LoginTwoFAActivity extends AppCompatActivity {
-    private static final String VERIFY_TWO_FA = "https://hwealth.herokuapp.com/api/two-factor/authenticate";
     private static final String SHAREDPREF = "SHAREDPREF";
     private static String TAG = "LoginTwoFAActivity";
     private RequestQueue mQueue;

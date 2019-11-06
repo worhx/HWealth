@@ -31,12 +31,12 @@ import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.UPDATE_BMI_URL;
+import static com.team09.hwealth.utils.Constants.UPDATE_DOB_URL;
+import static com.team09.hwealth.utils.Constants.UPDATE_EMAIL_URL;
 
 public class EditActivity extends AppCompatActivity {
     private static final String TAG = "EditActivity";
-    private static final String UPDATE_BMI_URL = "https://hwealth.herokuapp.com/api/profile/update-bmi";
-    private static final String UPDATE_EMAIL_URL = "https://hwealth.herokuapp.com/api/account/update-email";
-    private static final String UPDATE_DOB_URL = "https://hwealth.herokuapp.com/api/profile/update-profile";
     private static final String SHAREDPREF = "SHAREDPREF";
     private EditText bmi;
     private EditText height;

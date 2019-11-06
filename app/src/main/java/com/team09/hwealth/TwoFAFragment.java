@@ -34,12 +34,12 @@ import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.DISABLE_TWO_FA_URL;
+import static com.team09.hwealth.utils.Constants.ENABLE_TWO_FA_URL;
 
 
 public class TwoFAFragment extends Fragment {
     private static final String TAG = "TwoFAFragment";
-    private static final String ENABLEWTWOFA_URL = "https://hwealth.herokuapp.com/api/two-factor/get-authenticator";
-    private static final String DIASBLETWOFA_URL = "https://hwealth.herokuapp.com/api/two-factor/disable";
     private static final String SHAREDPREF = "SHAREDPREF";
     View view;
     private RequestQueue mQueue;
@@ -86,7 +86,7 @@ public class TwoFAFragment extends Fragment {
     private void EnableTwoFA(JSONObject data) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ENABLEWTWOFA_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ENABLE_TWO_FA_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -170,7 +170,7 @@ public class TwoFAFragment extends Fragment {
     private void DisableTwoFA(JSONObject data) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, DIASBLETWOFA_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DISABLE_TWO_FA_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

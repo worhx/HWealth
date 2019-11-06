@@ -33,11 +33,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.PROF_URL;
 
 
 public class NewConvoFragment extends Fragment {
 
-    private static final String PROF_URL = "https://hwealth.herokuapp.com/api/profile/professionals";
     private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
 

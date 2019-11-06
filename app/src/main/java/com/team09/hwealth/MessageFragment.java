@@ -36,9 +36,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.CONVERSATION_URL;
 
 public class MessageFragment extends Fragment {
-    private static final String CONVERSATION_URL = "https://hwealth.herokuapp.com/api/conversation";
     private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
 

@@ -36,11 +36,11 @@ import javax.crypto.NoSuchPaddingException;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.LOGIN_URL;
 
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private static final String LOGIN_URL = "https://hwealth.herokuapp.com/api/auth/login";
     private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
     private ProgressBar progressBar;

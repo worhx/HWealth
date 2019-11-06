@@ -35,12 +35,12 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.CONVERSATION_URL;
+import static com.team09.hwealth.utils.Constants.MESSAGE_URL;
 
 
 public class MessageListFragment extends Fragment {
 
-    private static final String MESSAGE_URL = "https://hwealth.herokuapp.com/api/message";
-    private static final String CONVO_URL = "https://hwealth.herokuapp.com/api/conversation";
     private static final String SHAREDPREF = "SHAREDPREF";
     private static final int delay = 10*1000;
     private String uid = "";
@@ -207,7 +207,7 @@ public class MessageListFragment extends Fragment {
         final ArrayList<MessageData> msgArrList = new ArrayList<>();
         final ListView listView = view.findViewById(R.id.listview_messages);
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, CONVO_URL + "/" + cid, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, CONVERSATION_URL + "/" + cid, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -286,7 +286,7 @@ public class MessageListFragment extends Fragment {
         final String saveData = data.toString();
         final ArrayList<MessageData> names = new ArrayList<>();
         RequestQueue mQueue = Volley.newRequestQueue(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getApplicationContext()));
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, CONVO_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, CONVERSATION_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

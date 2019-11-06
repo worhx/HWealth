@@ -43,10 +43,10 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.FOOD_URL;
 
 public class FoodFragment extends Fragment {
     private static final String TAG = "StepsFragment";
-    private static final String FOOD_URL = "https://hwealth.herokuapp.com/api/calories-record";
     private RequestQueue mQueue;
     private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;

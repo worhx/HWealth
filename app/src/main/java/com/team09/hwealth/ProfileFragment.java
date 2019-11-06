@@ -35,11 +35,11 @@ import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.ACCOUNT_URL;
+import static com.team09.hwealth.utils.Constants.PROFILE_URL;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
-    private static final String PROFILE_URL = "https://hwealth.herokuapp.com/api/profile";
-    private static final String ACCOUNT_URL = "https://hwealth.herokuapp.com/api/account";
     private static final String SHAREDPREF = "SHAREDPREF";
     private String height;
     private String weight;

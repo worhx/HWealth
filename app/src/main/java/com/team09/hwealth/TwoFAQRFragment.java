@@ -46,10 +46,10 @@ import static android.content.Context.WINDOW_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
+import static com.team09.hwealth.utils.Constants.TWO_FA_QR_URL;
 
 
 public class TwoFAQRFragment extends Fragment {
-    private static final String TWOFAQR_URL = "https://hwealth.herokuapp.com/api/two-factor/enable";
     private static final String TAG = "TwoFAQRFragment";
     private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
@@ -159,7 +159,7 @@ public class TwoFAQRFragment extends Fragment {
         final String saveData = data.toString();
         RequestQueue mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()).getApplicationContext());
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, TWOFAQR_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, TWO_FA_QR_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
