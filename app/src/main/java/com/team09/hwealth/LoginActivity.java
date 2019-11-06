@@ -41,11 +41,11 @@ import javax.crypto.NoSuchPaddingException;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static com.team09.hwealth.utils.Constants.CAPTCHA_URL;
 import static com.team09.hwealth.utils.Constants.LOGIN_URL;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.SITE_KEY;
 
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
     private ProgressBar progressBar;
     private SharedPreferences prefs;
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText userET = findViewById(R.id.userET);
         final EditText passET = findViewById(R.id.passwordET);
         progressBar = findViewById(R.id.progressBar);
-        prefs = getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         mQueue = Volley.newRequestQueue(this);
         login.setOnClickListener(new View.OnClickListener() {
             @Override

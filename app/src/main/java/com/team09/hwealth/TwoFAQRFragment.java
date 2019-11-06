@@ -45,11 +45,11 @@ import static android.content.Context.WINDOW_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.TWO_FA_QR_URL;
 
 
 public class TwoFAQRFragment extends Fragment {
-    private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
     View view;
 
@@ -60,7 +60,7 @@ public class TwoFAQRFragment extends Fragment {
         if (getArguments() != null) {
             String twoFAStr = getArguments().getString("twoFA");
             try {
-                prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+                prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
                 final JSONObject twoFAJSON = new JSONObject(twoFAStr);
                 view = inflater.inflate(R.layout.fragment_two_faqr, container, false);
                 qrGenerator(twoFAJSON.getString("otpauth_url"));

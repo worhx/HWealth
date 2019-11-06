@@ -35,10 +35,10 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.DISABLE_TWO_FA_URL;
 import static com.team09.hwealth.utils.Constants.ENABLE_TWO_FA_URL;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
 
 public class TwoFAFragment extends Fragment {
-    private static final String SHAREDPREF = "SHAREDPREF";
     View view;
     private RequestQueue mQueue;
     private SharedPreferences prefs;
@@ -48,7 +48,7 @@ public class TwoFAFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_two_fa, container, false);
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
 
         final EditText passwordET = view.findViewById(R.id.passwordET);
         Button confirmButton = view.findViewById(R.id.confirmPasswordButton);

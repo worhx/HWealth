@@ -37,9 +37,9 @@ import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.CONVERSATION_URL;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
 public class MessageFragment extends Fragment {
-    private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
 
 
@@ -47,7 +47,7 @@ public class MessageFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view =  inflater.inflate(R.layout.fragment_message,container,false);
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         JSONObject messageJSON = new JSONObject();
         retrieveName(messageJSON, view);
         Button newConvoBtn = view.findViewById(R.id.new_convo_btn);

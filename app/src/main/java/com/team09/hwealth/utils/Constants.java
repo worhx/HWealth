@@ -21,6 +21,8 @@ public class Constants {
     public static final String PROF_URL = BASE_END_POINT + "/profile/professionals";
     public static final String MESSAGE_URL = BASE_END_POINT + "/message";
     public static final String CONVERSATION_URL = BASE_END_POINT + "/conversation";
+    public static final String SHARED_PREF = "SHARED_PREF";
+
 
     public static final String SITE_KEY = "6LeFk74UAAAAAL4n7fRYBIMw8Ri_G52acK3RfpVK";
     public static final String TRANSFORMATION = "AES/GCM/NoPadding";

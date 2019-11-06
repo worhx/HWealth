@@ -36,9 +36,9 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.ACCOUNT_URL;
 import static com.team09.hwealth.utils.Constants.PROFILE_URL;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
 public class ProfileFragment extends Fragment {
-    private static final String SHAREDPREF = "SHAREDPREF";
     private String height;
     private String weight;
     private String bmi;
@@ -60,7 +60,7 @@ public class ProfileFragment extends Fragment {
         }
         Button changePasswordButton = view.findViewById(R.id.changePasswordButton);
         ImageButton setting = view.findViewById(R.id.setting);
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         JSONObject send = new JSONObject();
         RetrieveProfile(send, view);
         RetrieveAccount(send, view);

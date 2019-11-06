@@ -34,10 +34,10 @@ import javax.crypto.NoSuchPaddingException;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.VERIFY_TWO_FA;
 
 public class LoginTwoFAActivity extends AppCompatActivity {
-    private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
     private SharedPreferences prefs;
 
@@ -46,7 +46,7 @@ public class LoginTwoFAActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_two_fa);
         Button confirmSixDigitCodeButton = findViewById(R.id.confirmSixDigitCodeButton);
-        prefs = getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         confirmSixDigitCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

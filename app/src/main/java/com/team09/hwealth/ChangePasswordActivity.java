@@ -29,9 +29,9 @@ import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.CHANGE_PASSWORD_URL;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
 public class ChangePasswordActivity extends AppCompatActivity {
-    private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
     private SharedPreferences prefs;
 
@@ -40,7 +40,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         Button changePasswordButton = findViewById(R.id.changePasswordButton);
-        prefs = Objects.requireNonNull(getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE));
+        prefs = Objects.requireNonNull(getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE));
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

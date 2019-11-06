@@ -30,12 +30,12 @@ import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.UPDATE_BMI_URL;
 import static com.team09.hwealth.utils.Constants.UPDATE_DOB_URL;
 import static com.team09.hwealth.utils.Constants.UPDATE_EMAIL_URL;
 
 public class EditActivity extends AppCompatActivity {
-    private static final String SHAREDPREF = "SHAREDPREF";
     private EditText bmi;
     private EditText height;
     private EditText weight;
@@ -52,7 +52,7 @@ public class EditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editprofile);
-        prefs = getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         ImageButton close = findViewById(R.id.closeEdit);
         ImageButton proceed = findViewById(R.id.tickEdit);
         height = findViewById(R.id.heightET);

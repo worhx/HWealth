@@ -34,11 +34,11 @@ import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.PROF_URL;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
 
 public class NewConvoFragment extends Fragment {
 
-    private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
 
     @Override
@@ -46,7 +46,7 @@ public class NewConvoFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_new_convo, container, false);
         // Inflate the layout for this fragment
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         JSONObject messageJSON = new JSONObject();
         retrieveProf(messageJSON, view);
 

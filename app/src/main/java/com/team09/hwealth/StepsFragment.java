@@ -39,11 +39,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.STEP_URL;
 
 public class StepsFragment extends Fragment {
     private RequestQueue mQueue;
-    private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mStep = new ArrayList<>();
@@ -54,7 +54,7 @@ public class StepsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_steps, container, false);
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         JSONObject send = new JSONObject();
         RetrieveSteps(send, view);
         date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());

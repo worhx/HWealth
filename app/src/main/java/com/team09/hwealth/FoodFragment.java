@@ -43,10 +43,10 @@ import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.FOOD_URL;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
 public class FoodFragment extends Fragment {
     private RequestQueue mQueue;
-    private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mCalories = new ArrayList<>();
@@ -61,7 +61,7 @@ public class FoodFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(this.getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.food_type_array));
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         spinner.setAdapter(adapter);
         JSONObject send = new JSONObject();
         RetrieveSteps(send,view);
