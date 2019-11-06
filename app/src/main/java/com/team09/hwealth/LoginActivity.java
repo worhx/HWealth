@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.NetworkResponse;
@@ -21,6 +22,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,11 +41,13 @@ import java.security.NoSuchProviderException;
 import javax.crypto.NoSuchPaddingException;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static com.team09.hwealth.utils.Constants.CAPTCHA_URL;
+import static com.team09.hwealth.utils.Constants.LOGIN_URL;
+import static com.team09.hwealth.utils.Constants.SITE_KEY;
 
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private static final String LOGIN_URL = "https://hwealth.herokuapp.com/api/auth/login";
     private static final String SHAREDPREF = "SHAREDPREF";
     private RequestQueue mQueue;
     private ProgressBar progressBar;
@@ -75,7 +84,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         Log.d(TAG, send.toString());
                         progressBar.setVisibility(View.VISIBLE);
-                        Submit(send);
+                        validateCaptcha(send);
+                        //Submit(send);
                         handledClick = false;
                         InputMethodManager imm = (InputMethodManager) getSystemService(LoginActivity.INPUT_METHOD_SERVICE);
                         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
@@ -112,6 +122,102 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
         handledClick = false;
     }
+
+
+    public void validateCaptcha(final JSONObject submitJSON) {
+        SafetyNet.getClient(this).verifyWithRecaptcha(SITE_KEY)
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                            @Override
+                            public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                                // Indicates communication with reCAPTCHA service was
+                                // successful.
+                                String userResponseToken = response.getTokenResult();
+                                if (!userResponseToken.isEmpty()) {
+                                    // Validate the user response token using the
+                                    // reCAPTCHA siteverify API.
+                                    verifyTokenOnServer(userResponseToken, submitJSON);
+                                }
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if (e instanceof ApiException) {
+                            // An error occurred when communicating with the
+                            // reCAPTCHA service. Refer to the status code to
+                            // handle the error appropriately.
+                            ApiException apiException = (ApiException) e;
+                            int statusCode = apiException.getStatusCode();
+                            Log.d(TAG, "Error: " + CommonStatusCodes
+                                    .getStatusCodeString(statusCode));
+                        } else {
+                            // A different, unknown type of error occurred.
+                            Log.d(TAG, "Error: " + e.getMessage());
+                        }
+                    }
+                });
+    }
+
+    public void verifyTokenOnServer(String token, final JSONObject submit) {
+        JSONObject tokenJSON = new JSONObject();
+        try {
+            tokenJSON.put("captchaResponse", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final String saveData;
+        saveData = tokenJSON.toString();
+        mQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, CAPTCHA_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            if (jsonResponse.getString("success").equals("true")) {
+                                Log.d(TAG, jsonResponse.toString());
+                                Submit(submit);
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.data != null) {
+                    String strJSONError = new String(networkResponse.data);
+                    JSONObject errorJSON;
+                    try {
+                        errorJSON = new JSONObject(strJSONError);
+                        Toast.makeText(LoginActivity.this, errorJSON.getString("error-codes"), Toast.LENGTH_LONG).show();
+                    } catch (JSONException e) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() {
+                return saveData.getBytes(StandardCharsets.UTF_8);
+            }
+
+        };
+        mQueue.add(stringRequest);
+    }
+
 
     ////Submit
     private void Submit(JSONObject data) {

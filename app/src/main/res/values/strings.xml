@@ -11,7 +11,7 @@
     <string name="messages">Messages</string>
     <string name="email">Email</string>
     <string name="steps">Steps</string>
-    <string name="create_steps">Create Steps</string>
+    <string name="record_steps">Record Steps</string>
     <string name="retrieve_steps">Retrieve Steps</string>
     <string name="dob">Date Of Birth</string>
     <string name="height">Height</string>

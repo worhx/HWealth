@@ -23,9 +23,11 @@ import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.FORGET_PASSWORD_URL;
+
 
 public class ForgetPasswordActivity extends AppCompatActivity {
-    private static final String FORGETPASSWORD_URL = "https://hwealth.herokuapp.com/api/account/forgot-password";
     private static final String TAG = "ForgetPasswordActivity";
     private RequestQueue mQueue;
 
@@ -60,7 +62,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     private void Submit(JSONObject data) {
         final String saveData = data.toString();
         mQueue = Volley.newRequestQueue(getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, FORGETPASSWORD_URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, FORGET_PASSWORD_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -86,6 +88,12 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(ForgetPasswordActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            finish();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

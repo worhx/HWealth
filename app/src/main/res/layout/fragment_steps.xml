@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:padding="6dip">
 
     <TextView
         android:id="@+id/stepsTV"
@@ -16,90 +14,27 @@
         android:textSize="24sp" />
 
     <EditText
-        android:id="@+id/currentStepsET"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/createStepsButton"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create_steps" />
-
-        <Button
-            android:id="@+id/retrieveStepsButton"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/retrieve_steps" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/foodTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/food_intake"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/mealTypeTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/food_type"
-        android:textColor="@color/colorPrimary"
-        android:textSize="13sp" />
-
-    <Spinner
-        android:id="@+id/foodTypeSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/foodNameTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/food_name"
-        android:textColor="@color/colorPrimary"
-        android:textSize="13sp" />
-
-    <EditText
-        android:id="@+id/foodNameET"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text" />
-
-    <TextView
-        android:id="@+id/foodCaloriesTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/food_calories"
-        android:textColor="@color/colorPrimary"
-        android:textSize="13sp" />
-
-    <EditText
-        android:id="@+id/foodCaloriesET"
+        android:id="@+id/stepsET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number" />
 
     <Button
-        android:id="@+id/recordFoodButton"
+        android:id="@+id/createStepsButton"
         style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/record_food" />
+        android:background="@color/colorAccent"
+        android:text="@string/record_steps"
+        android:textColor="@color/white" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recylerView">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>
