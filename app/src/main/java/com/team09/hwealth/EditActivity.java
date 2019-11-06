@@ -144,7 +144,7 @@ public class EditActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please do not height or weight empty", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Height or weight is empty", Toast.LENGTH_LONG).show();
                 }
             }
         });
