@@ -34,9 +34,10 @@ import java.util.Map;
 import javax.crypto.NoSuchPaddingException;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.VERIFY_TWO_FA;
 
 public class LoginTwoFAActivity extends AppCompatActivity {
-    private static final String VERIFY_TWO_FA = "https://hwealth.herokuapp.com/api/two-factor/authenticate";
     private static final String SHAREDPREF = "SHAREDPREF";
     private static String TAG = "LoginTwoFAActivity";
     private RequestQueue mQueue;
@@ -111,6 +112,12 @@ public class LoginTwoFAActivity extends AppCompatActivity {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(LoginTwoFAActivity.this, errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            finish();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

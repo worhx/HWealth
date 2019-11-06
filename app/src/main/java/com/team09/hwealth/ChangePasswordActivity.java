@@ -29,11 +29,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.CHANGE_PASSWORD_URL;
 
 public class ChangePasswordActivity extends AppCompatActivity {
     private static final String TAG = "ChangePasswordActivity";
     private static final String SHAREDPREF = "SHAREDPREF";
-    private static final String CHANGE_PASSWORD_URL = "https://hwealth.herokuapp.com/api/account/update-password";
     private RequestQueue mQueue;
     private SharedPreferences prefs;
 
@@ -114,6 +114,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     try {
                         errorJSON = new JSONObject(strJSONError);
                         Toast.makeText(getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+                        if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                            LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(LoginActivityIntent);
+                            finish();
+                        }
                     } catch (JSONException e) {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }

@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new ProfileFragment();
                     break;
                 case R.id.nav_health:
-                    selectedFragment = new StepsFragment();
+                    selectedFragment = new HealthFragment();
                     break;
                 case R.id.nav_message:
                     selectedFragment = new MessageFragment();

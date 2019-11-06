@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d(TAG, send.toString());
                         progressBar.setVisibility(View.VISIBLE);
                         validateCaptcha(send);
-                        Submit(send);
+                        //Submit(send);
                         handledClick = false;
                         InputMethodManager imm = (InputMethodManager) getSystemService(LoginActivity.INPUT_METHOD_SERVICE);
                         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
@@ -122,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
         handledClick = false;
     }
+
 
     public void validateCaptcha(final JSONObject submitJSON) {
         SafetyNet.getClient(this).verifyWithRecaptcha(SITE_KEY)
@@ -216,6 +217,8 @@ public class LoginActivity extends AppCompatActivity {
         };
         mQueue.add(stringRequest);
     }
+
+
     ////Submit
     private void Submit(JSONObject data) {
         final String saveData = data.toString();
