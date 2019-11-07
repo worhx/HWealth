@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,10 +36,9 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.ACCOUNT_URL;
 import static com.team09.hwealth.utils.Constants.PROFILE_URL;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
 public class ProfileFragment extends Fragment {
-    private static final String TAG = "ProfileFragment";
-    private static final String SHAREDPREF = "SHAREDPREF";
     private String height;
     private String weight;
     private String bmi;
@@ -62,7 +60,7 @@ public class ProfileFragment extends Fragment {
         }
         Button changePasswordButton = view.findViewById(R.id.changePasswordButton);
         ImageButton setting = view.findViewById(R.id.setting);
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         JSONObject send = new JSONObject();
         RetrieveProfile(send, view);
         RetrieveAccount(send, view);
@@ -126,7 +124,6 @@ public class ProfileFragment extends Fragment {
         JSONObject send = new JSONObject();
         RetrieveAccount(send, Objects.requireNonNull(super.getView()));
         RetrieveProfile(send, super.getView());
-        Log.d(TAG, "onresume");
     }
 
     @Override
@@ -135,7 +132,6 @@ public class ProfileFragment extends Fragment {
         JSONObject send = new JSONObject();
         RetrieveAccount(send, Objects.requireNonNull(super.getView()));
         RetrieveProfile(send, super.getView());
-        Log.d(TAG, "onstart");
 
     }
 
@@ -154,9 +150,7 @@ public class ProfileFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 JSONObject jsonProfile = new JSONObject(jsonResponse.getString("profile"));
-                                Log.d(TAG, jsonProfile.toString());
                                 name = jsonProfile.getString("fullname");
                                 nameTextView.setText(name);
                                 if (jsonProfile.has("weight") && jsonProfile.has("height") && jsonProfile.has("bmi")) {
@@ -245,9 +239,7 @@ public class ProfileFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 JSONObject jsonProfile = new JSONObject(jsonResponse.getString("account"));
-                                Log.d(TAG, jsonProfile.toString());
                                 email = jsonProfile.getString("email");
                                 emailTextView.setText(email);
                             }

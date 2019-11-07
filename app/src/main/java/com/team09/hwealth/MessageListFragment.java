@@ -37,11 +37,10 @@ import java.util.Objects;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.CONVERSATION_URL;
 import static com.team09.hwealth.utils.Constants.MESSAGE_URL;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
 
 public class MessageListFragment extends Fragment {
-
-    private static final String SHAREDPREF = "SHAREDPREF";
     private static final int delay = 10*1000;
     private String uid = "";
     private String cid = "";
@@ -56,7 +55,7 @@ public class MessageListFragment extends Fragment {
         final View topview =  inflater.inflate(R.layout.fragment_message_list, container, false);
         Button msgBtn = topview.findViewById(R.id.button_chatbox_send);
         final EditText chatbox = topview.findViewById(R.id.edittext_chatbox);
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         mQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity().getApplicationContext()));
 
         msgBtn.setOnClickListener(new View.OnClickListener() {

@@ -2,7 +2,6 @@ package com.team09.hwealth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +18,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,7 +33,6 @@ import static com.team09.hwealth.utils.Constants.REGISTER_URL;
 import static com.team09.hwealth.utils.Constants.SITE_KEY;
 
 public class RegisterActivity extends AppCompatActivity {
-    private static final String TAG = "RegisterActivity";
     private RequestQueue mQueue;
 
     @Override
@@ -59,11 +56,11 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if ((fullNameET.getText().length() < 5) || (userET.getText().length() < 5)) {
                     Toast.makeText(getApplicationContext(), "Username or full name cannot be less than 5 characters ", Toast.LENGTH_LONG).show();
                 } else if (!fullNameET.getText().toString().matches("^[a-zA-Z .,\\-']{1,100}$")) {
-                    Toast.makeText(getApplicationContext(), "Full name should only contain letters", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Invalid full name.", Toast.LENGTH_LONG).show();
                 } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailET.getText().toString()).matches()) {
                     Toast.makeText(getApplicationContext(), "Please enter valid email address", Toast.LENGTH_LONG).show();
-                } else if (!userET.getText().toString().matches("^[a-zA-Z0-9_]*$")) {
-                    Toast.makeText(getApplicationContext(), "Username should only contain upper and lowercase letters, numbers, and underscores", Toast.LENGTH_LONG).show();
+                } else if (!userET.getText().toString().matches("^[a-zA-Z0-9]*$")) {
+                    Toast.makeText(getApplicationContext(), "Username should only contain upper and lowercase letters and numbers", Toast.LENGTH_LONG).show();
                 } else if (!passET.getText().toString().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*<>])(?=\\S+$).{8,64}$")) {
                     Toast.makeText(getApplicationContext(), "Password must contain 1 Uppercase, 1 Lowercase, 1 Number, 1 Special Character, a minimum of 8 characters in total, and no white spaces.", Toast.LENGTH_LONG).show();
                 } else if (!passET.getText().toString().matches(confirmPasswordET.getText().toString())) {
@@ -85,7 +82,6 @@ public class RegisterActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    Log.d(TAG, send.toString());
                     validateCaptcha(send);
                 }
             }
@@ -117,13 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                             // An error occurred when communicating with the
                             // reCAPTCHA service. Refer to the status code to
                             // handle the error appropriately.
-                            ApiException apiException = (ApiException) e;
-                            int statusCode = apiException.getStatusCode();
-                            Log.d(TAG, "Error: " + CommonStatusCodes
-                                    .getStatusCodeString(statusCode));
-                        } else {
-                            // A different, unknown type of error occurred.
-                            Log.d(TAG, "Error: " + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -146,7 +136,6 @@ public class RegisterActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("success").equals("true")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 Submit(submit);
                             }
 
@@ -199,7 +188,6 @@ public class RegisterActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 Toast.makeText(RegisterActivity.this, jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
                                 Intent LoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(LoginActivityIntent);

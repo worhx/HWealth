@@ -1,7 +1,6 @@
 package com.team09.hwealth;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 import java.util.Objects;
 
 public class HealthFragment extends Fragment {
-    static final String TAG = "HealthFrag";
 
     @Nullable
     @Override
@@ -26,18 +24,16 @@ public class HealthFragment extends Fragment {
         Steps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "HealthFragment");
                 final FragmentTransaction ft = Objects.requireNonNull(getFragmentManager()).beginTransaction();
-                ft.replace(R.id.fragment_container, new StepsFragment(), "NewFragmentTag");
+                ft.replace(R.id.fragment_container, new StepsFragment());
                 ft.commit();
             }
         });
         Calories.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "HealthFragment");
                 final FragmentTransaction ft = Objects.requireNonNull(getFragmentManager()).beginTransaction();
-                ft.replace(R.id.fragment_container, new FoodFragment(), "NewFragmentTag");
+                ft.replace(R.id.fragment_container, new FoodFragment());
                 ft.commit();
             }
         });

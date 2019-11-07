@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,12 +45,11 @@ import static android.content.Context.WINDOW_SERVICE;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.TWO_FA_QR_URL;
 
 
 public class TwoFAQRFragment extends Fragment {
-    private static final String TAG = "TwoFAQRFragment";
-    private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
     View view;
 
@@ -62,7 +60,7 @@ public class TwoFAQRFragment extends Fragment {
         if (getArguments() != null) {
             String twoFAStr = getArguments().getString("twoFA");
             try {
-                prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+                prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
                 final JSONObject twoFAJSON = new JSONObject(twoFAStr);
                 view = inflater.inflate(R.layout.fragment_two_faqr, container, false);
                 qrGenerator(twoFAJSON.getString("otpauth_url"));
@@ -124,7 +122,7 @@ public class TwoFAQRFragment extends Fragment {
             createQRCode(data, charset, hintMap, smallestDimension, smallestDimension);
 
         } catch (Exception ex) {
-            Log.e("QrGenerate", ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -166,7 +164,6 @@ public class TwoFAQRFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 TextView recoveryCodeTV = v.findViewById(R.id.recoveryCodeTV);
                                 recoveryCodeTV.setText(jsonResponse.getString("recoveryCode"));
                                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message") + " You will be logged out", Toast.LENGTH_LONG).show();

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,12 +39,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.STEP_URL;
 
 public class StepsFragment extends Fragment {
-    private static final String TAG = "StepsFragment";
     private RequestQueue mQueue;
-    private static final String SHAREDPREF = "SHAREDPREF";
     private SharedPreferences prefs;
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mStep = new ArrayList<>();
@@ -56,7 +54,7 @@ public class StepsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_steps, container, false);
-        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         JSONObject send = new JSONObject();
         RetrieveSteps(send, view);
         date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
@@ -76,7 +74,6 @@ public class StepsFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Log.d(TAG, send.toString());
                         stepsET.setText("");
                         SubmitSteps(send,view);
                     } else {
@@ -102,7 +99,6 @@ public class StepsFragment extends Fragment {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
                                 JSONArray recordsJSONArr = new JSONArray(jsonResponse.getString("records"));
                                 for (int i = 0; i < recordsJSONArr.length(); i++) {
                                     JSONObject recordsJSONArrJSONObject = recordsJSONArr.getJSONObject(i);
@@ -116,8 +112,6 @@ public class StepsFragment extends Fragment {
                                         mStep.add(a);
                                     }
                                 }
-                                Log.d(TAG, mStep.toString());
-                                Log.d(TAG, mDate.toString());
                                 initRecyclerView(view);
                             }
 
@@ -197,7 +191,6 @@ public class StepsFragment extends Fragment {
                             if (jsonResponse.getString("error").equals("false")) {
                                 mStep.clear();
                                 mDate.clear();
-                                Log.d(TAG, jsonResponse.toString());
                                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), jsonResponse.getString("message"), Toast.LENGTH_LONG).show();
                                 JSONObject send = new JSONObject();
                                 RetrieveSteps(send,view);
@@ -248,7 +241,6 @@ public class StepsFragment extends Fragment {
                     String decrypted = cryptor.decryptText(encrypted, iv);
                     HashMap<String, String> headers = new HashMap<>();
                     headers.put("Authorization", "Bearer " + decrypted);
-                    Log.d(TAG,"Header"+headers.toString());
                     return headers;
 
                 } catch (Exception e) {

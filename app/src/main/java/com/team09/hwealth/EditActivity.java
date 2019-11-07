@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -31,13 +30,12 @@ import java.util.Objects;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.UPDATE_BMI_URL;
 import static com.team09.hwealth.utils.Constants.UPDATE_DOB_URL;
 import static com.team09.hwealth.utils.Constants.UPDATE_EMAIL_URL;
 
 public class EditActivity extends AppCompatActivity {
-    private static final String TAG = "EditActivity";
-    private static final String SHAREDPREF = "SHAREDPREF";
     private EditText bmi;
     private EditText height;
     private EditText weight;
@@ -54,7 +52,7 @@ public class EditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editprofile);
-        prefs = getSharedPreferences(SHAREDPREF, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         ImageButton close = findViewById(R.id.closeEdit);
         ImageButton proceed = findViewById(R.id.tickEdit);
         height = findViewById(R.id.heightET);
@@ -146,7 +144,7 @@ public class EditActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please do not height or weight empty", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Height or weight is empty", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -160,17 +158,6 @@ public class EditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.toString());
-                                JSONObject jsonProfile = new JSONObject(jsonResponse.getString("profile"));
-                                Log.d(TAG, jsonProfile.toString());
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
                     }
                 }, new Response.ErrorListener() {
@@ -232,16 +219,6 @@ public class EditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.getString("message"));
-
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
                     }
                 }, new Response.ErrorListener() {
@@ -303,17 +280,6 @@ public class EditActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            if (jsonResponse.getString("error").equals("false")) {
-                                Log.d(TAG, jsonResponse.getString("message"));
-
-                            }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
                     }
                 }, new Response.ErrorListener() {

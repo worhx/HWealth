@@ -2,7 +2,6 @@ package com.team09.hwealth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +27,6 @@ import static com.team09.hwealth.utils.Constants.FORGET_PASSWORD_URL;
 
 
 public class ForgetPasswordActivity extends AppCompatActivity {
-    private static final String TAG = "ForgetPasswordActivity";
     private RequestQueue mQueue;
 
 
@@ -45,7 +43,6 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                     JSONObject send = new JSONObject();
                     try {
                         send.put("email", email.getText().toString());
-                        Log.d(TAG, "text");
                         Submit(send);
                     } catch (JSONException e) {
                         e.printStackTrace();
