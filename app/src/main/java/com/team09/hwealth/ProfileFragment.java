@@ -111,6 +111,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 Intent ChangePasswordActivity = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), com.team09.hwealth.ChangePasswordActivity.class);
                 startActivity(ChangePasswordActivity);
+                getActivity().finish();
             }
         });
         return view;

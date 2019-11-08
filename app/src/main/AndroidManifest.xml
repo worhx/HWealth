@@ -12,10 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:launchMode="singleInstance"
             android:name=".ChangePasswordActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
+            android:launchMode="singleInstance"
             android:name=".LoginTwoFAActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
@@ -24,22 +26,27 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
+            android:launchMode="singleInstance"
             android:name=".ForgetPasswordActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
+            android:launchMode="singleInstance"
             android:name=".RegisterActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
+            android:launchMode="singleInstance"
             android:name=".MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
+            android:launchMode="singleInstance"
             android:name=".EditActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
+            android:launchMode="singleInstance"
             android:name=".LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
