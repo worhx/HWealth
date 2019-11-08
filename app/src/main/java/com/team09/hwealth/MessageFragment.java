@@ -1,5 +1,7 @@
 package com.team09.hwealth;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,12 +43,13 @@ import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
 public class MessageFragment extends Fragment {
     private SharedPreferences prefs;
-
+    private AlertDialog pd;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view =  inflater.inflate(R.layout.fragment_message,container,false);
+        pd = new ProgressDialog.Builder(getActivity()).setCancelable(false).show();
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         JSONObject messageJSON = new JSONObject();
         retrieveName(messageJSON, view);
@@ -62,7 +65,9 @@ public class MessageFragment extends Fragment {
         return view;
     }
 
-    private void retrieveName(JSONObject data, View view){
+
+
+    private void retrieveName(JSONObject data, final View view){
         final String saveData = data.toString();
         final ArrayList<MessageData> names = new ArrayList<>();
         final ListView messageListView = view.findViewById(R.id.message_list);
@@ -104,9 +109,12 @@ public class MessageFragment extends Fragment {
                                     mlf.sendId(names.get(i).getUid(), names.get(i).getCid());
                                 }
                             });
+
+
                         } catch(JSONException e){
                             e.printStackTrace();
                         }
+                        pd.hide();
                     }
                 }, new Response.ErrorListener() {
 
@@ -164,5 +172,7 @@ public class MessageFragment extends Fragment {
         };
         mQueue.add(stringRequest);
     }
+
+
 
 }

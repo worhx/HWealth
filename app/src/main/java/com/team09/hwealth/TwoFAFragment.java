@@ -178,6 +178,7 @@ public class TwoFAFragment extends Fragment {
                                 Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
                                 intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
+                                getActivity().finish();
                             }
 
                         } catch (JSONException e) {
