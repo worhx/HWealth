@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -44,7 +45,7 @@ import static com.team09.hwealth.utils.Constants.LOGIN_URL;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.SITE_KEY;
 
-
+@Obfuscate
 public class LoginActivity extends AppCompatActivity {
     private RequestQueue mQueue;
     private ProgressBar progressBar;

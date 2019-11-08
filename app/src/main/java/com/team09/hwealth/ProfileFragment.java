@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -37,7 +38,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.ACCOUNT_URL;
 import static com.team09.hwealth.utils.Constants.PROFILE_URL;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
-
+@Obfuscate
 public class ProfileFragment extends Fragment {
     private String height;
     private String weight;

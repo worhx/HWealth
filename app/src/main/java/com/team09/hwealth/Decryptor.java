@@ -17,6 +17,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import io.michaelrocks.paranoid.Obfuscate;
+
+@Obfuscate
 public class Decryptor {
 
     public static String decryptMsg(String cipherText, String key){

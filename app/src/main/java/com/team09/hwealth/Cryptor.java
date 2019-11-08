@@ -5,6 +5,7 @@ import android.security.keystore.KeyProperties;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +28,7 @@ import javax.crypto.spec.GCMParameterSpec;
 
 import static com.team09.hwealth.utils.Constants.ANDROID_KEY_STORE;
 import static com.team09.hwealth.utils.Constants.TRANSFORMATION;
-
+@Obfuscate
 class Cryptor {
 
 

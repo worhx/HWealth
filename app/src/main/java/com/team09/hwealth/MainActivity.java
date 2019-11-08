@@ -6,11 +6,12 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
-
+@Obfuscate
 public class MainActivity extends AppCompatActivity {
 
     @Override

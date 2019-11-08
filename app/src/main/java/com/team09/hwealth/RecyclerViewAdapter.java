@@ -9,9 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import java.util.ArrayList;
-
+@Obfuscate
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
     private ArrayList<String> mStep;
     private ArrayList<String> mDate;

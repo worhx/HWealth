@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -48,7 +49,7 @@ import static android.graphics.Color.WHITE;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.TWO_FA_QR_URL;
 
-
+@Obfuscate
 public class TwoFAQRFragment extends Fragment {
     private SharedPreferences prefs;
     View view;

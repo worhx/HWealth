@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -31,7 +32,7 @@ import java.nio.charset.StandardCharsets;
 import static com.team09.hwealth.utils.Constants.CAPTCHA_URL;
 import static com.team09.hwealth.utils.Constants.REGISTER_URL;
 import static com.team09.hwealth.utils.Constants.SITE_KEY;
-
+@Obfuscate
 public class RegisterActivity extends AppCompatActivity {
     private RequestQueue mQueue;
 
