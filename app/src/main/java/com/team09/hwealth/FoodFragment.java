@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -44,7 +45,7 @@ import java.util.Objects;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.FOOD_URL;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
-
+@Obfuscate
 public class FoodFragment extends Fragment {
     private RequestQueue mQueue;
     private SharedPreferences prefs;

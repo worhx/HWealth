@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -39,7 +40,7 @@ import static com.team09.hwealth.utils.Constants.CONVERSATION_URL;
 import static com.team09.hwealth.utils.Constants.MESSAGE_URL;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
-
+@Obfuscate
 public class MessageListFragment extends Fragment {
     private static final int delay = 10*1000;
     private String uid = "";

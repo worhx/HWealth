@@ -1,5 +1,8 @@
 package com.team09.hwealth.utils;
 
+import io.michaelrocks.paranoid.Obfuscate;
+
+@Obfuscate
 public class Constants {
     private static final String BASE_END_POINT = "https://www.hwealth.me/api";
     public static final String UPDATE_BMI_URL = BASE_END_POINT + "/profile/update-bmi";

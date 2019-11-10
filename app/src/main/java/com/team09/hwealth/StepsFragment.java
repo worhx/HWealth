@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -41,7 +42,7 @@ import java.util.Objects;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.STEP_URL;
-
+@Obfuscate
 public class StepsFragment extends Fragment {
     private RequestQueue mQueue;
     private SharedPreferences prefs;

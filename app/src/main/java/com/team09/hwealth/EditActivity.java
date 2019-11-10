@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -34,7 +35,7 @@ import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 import static com.team09.hwealth.utils.Constants.UPDATE_BMI_URL;
 import static com.team09.hwealth.utils.Constants.UPDATE_DOB_URL;
 import static com.team09.hwealth.utils.Constants.UPDATE_EMAIL_URL;
-
+@Obfuscate
 public class EditActivity extends AppCompatActivity {
     private EditText bmi;
     private EditText height;

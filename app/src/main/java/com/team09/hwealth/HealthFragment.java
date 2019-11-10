@@ -10,9 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import java.util.Objects;
-
+@Obfuscate
 public class HealthFragment extends Fragment {
 
     @Nullable

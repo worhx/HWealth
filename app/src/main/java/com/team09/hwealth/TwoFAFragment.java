@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -37,7 +38,7 @@ import static com.team09.hwealth.utils.Constants.DISABLE_TWO_FA_URL;
 import static com.team09.hwealth.utils.Constants.ENABLE_TWO_FA_URL;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
-
+@Obfuscate
 public class TwoFAFragment extends Fragment {
     View view;
     private RequestQueue mQueue;

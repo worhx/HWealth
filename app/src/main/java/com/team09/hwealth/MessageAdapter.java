@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import io.michaelrocks.paranoid.Obfuscate;
+
+@Obfuscate
 public class MessageAdapter extends ArrayAdapter<MessageData> {
 
     private final Context context;

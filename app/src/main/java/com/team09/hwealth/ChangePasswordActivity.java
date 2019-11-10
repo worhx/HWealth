@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -30,7 +31,7 @@ import java.util.Objects;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.CHANGE_PASSWORD_URL;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
-
+@Obfuscate
 public class ChangePasswordActivity extends AppCompatActivity {
     private RequestQueue mQueue;
     private SharedPreferences prefs;

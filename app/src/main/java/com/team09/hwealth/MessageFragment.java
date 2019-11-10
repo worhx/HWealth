@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -41,6 +42,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.CONVERSATION_URL;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
+@Obfuscate
 public class MessageFragment extends Fragment {
     private SharedPreferences prefs;
     private AlertDialog pd;

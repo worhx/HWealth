@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -25,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.FORGET_PASSWORD_URL;
 
-
+@Obfuscate
 public class ForgetPasswordActivity extends AppCompatActivity {
     private RequestQueue mQueue;
 

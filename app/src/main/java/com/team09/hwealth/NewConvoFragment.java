@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import io.michaelrocks.paranoid.Obfuscate;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -36,7 +37,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.team09.hwealth.utils.Constants.PROF_URL;
 import static com.team09.hwealth.utils.Constants.SHARED_PREF;
 
-
+@Obfuscate
 public class NewConvoFragment extends Fragment {
 
     private SharedPreferences prefs;
