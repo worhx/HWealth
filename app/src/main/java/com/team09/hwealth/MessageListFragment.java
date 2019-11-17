@@ -143,7 +143,7 @@ public class MessageListFragment extends Fragment {
 
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+
                 }
 
             }
@@ -156,8 +156,8 @@ public class MessageListFragment extends Fragment {
                     JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
-                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                         if (errorJSON.getString("message").equals("Invalid token.")) {
+                            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
                             Intent LoginActivityIntent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
                             LoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
                             startActivity(LoginActivityIntent);
@@ -229,7 +229,7 @@ public class MessageListFragment extends Fragment {
                         listView.setAdapter(adapter);
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+
                 }
 
             }
@@ -242,9 +242,9 @@ public class MessageListFragment extends Fragment {
                     JSONObject errorJSON;
                     try {
                         errorJSON = new JSONObject(strJSONError);
-                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), errorJSON.getString("message"), Toast.LENGTH_LONG).show();
+
                     } catch (JSONException e) {
-                        Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+
                     }
 
                 }

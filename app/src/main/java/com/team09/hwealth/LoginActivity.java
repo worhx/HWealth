@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import io.michaelrocks.paranoid.Obfuscate;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -111,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(ForgetPasswordIntent);
             }
         });
+
     }
 
     @Override
@@ -280,6 +282,10 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mQueue.add(stringRequest);
     }
 
